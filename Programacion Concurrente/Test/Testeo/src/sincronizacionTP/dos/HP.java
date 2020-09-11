@@ -7,12 +7,12 @@ public  class HP {
         this.vida=n;
     }
 
-    public synchronized  int getVida() {
+    public  int getVida() {
         return vida;
     }
 
-    public synchronized void modificarVida(int cant) {
-        this.vida = vida+cant;
+    public synchronized void setVida(int vida) {
+        this.vida = vida;
         System.out.println("-----> "+getVida());
     }
 

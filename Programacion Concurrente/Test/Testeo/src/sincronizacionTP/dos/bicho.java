@@ -10,13 +10,11 @@ public class bicho implements Runnable {
         this.cantidad = n;
     }
 
-    
-
     public void run() {
 
-        for (int i = 0; i < 4; i++) {
-            this.vida.modificarVida(cantidad);
-        }
+        int vidaaa = this.vida.getVida();
+        int suma = vidaaa + cantidad;
+        this.vida.setVida(suma);
 
     }
 
