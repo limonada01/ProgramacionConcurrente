@@ -1,6 +1,6 @@
 public class Simpson {
     public static double f(double x){
-        double res=(double)(5*((double)(Math.pow(x,2)))+((double)2*x)-3);
+        double res=(double)(Math.tan(x));
         return res;
     }
     public static double h(double a,double b,int n){
@@ -38,7 +38,7 @@ public class Simpson {
 
     }
     public static void main(String[] args){
-        principal(2,4,4);
+        principal(-1,1.5,4);
         
     }
 }
