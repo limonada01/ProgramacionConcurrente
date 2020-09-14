@@ -7,7 +7,7 @@ public  class HP {
         this.vida=n;
     }
 
-    public  int getVida() {
+    public int getVida() {
         return vida;
     }
 

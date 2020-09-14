@@ -26,6 +26,9 @@ public class bicho implements Runnable {
         Thread curandero = new Thread(Cur, "Curandero");
         orco.start();
         curandero.start();
+        //orco.join();
+        //curandero.join();
+        System.out.println("Vida final: "+vida.getVida());
 
     }
 

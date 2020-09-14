@@ -2,33 +2,30 @@ package sincronizacionTP.tres;
 
 public class Letra implements Runnable {
     private char letter;
+    private char nextLetter;
+    private String cadena;
     private Turno turno;
 
-    public Letra(char letter, Turno turno) {
+    public Letra(char letter, char nextLetter, String cadena, Turno turno) {
         this.letter = letter;
+        this.nextLetter = nextLetter;
+        this.cadena = cadena;
         this.turno = turno;
     }
 
-    public void mostrar() {
-    };
-
     public void run() {
-
-        for (int i = 0; i < 5; i++) {
-            mostrar();
-        }
-
-    }
-
-    public Turno getTurno() {
-        return this.turno;
+        boolean flag=true;
+        do{
+            flag=this.turno.mostrar(letter, nextLetter, cadena);
+            
+        }while(flag);    
     }
 
     public static void main(String[] args) throws Exception {
         Turno turno = new Turno();
-        A a = new A('A', turno);
-        B b = new B('B', turno);
-        C c = new C('C', turno);
+        Letra a = new Letra('A', 'B', "A", turno);
+        Letra b = new Letra('B', 'C', "BB", turno);
+        Letra c = new Letra('C', 'A', "CCC", turno);
         Thread aa = new Thread(a, "A");
         Thread bb = new Thread(b, "B");
         Thread cc = new Thread(c, "C");
