@@ -25,7 +25,6 @@ public class Auto extends Vehiculo implements Runnable {
 
     }
 
-    
 
     public void run() {
         for (int i = 0; i < 7; i++) {
