@@ -19,7 +19,7 @@ public class atleta implements Runnable {
         this.testigo.getTestigo().acquire();
         System.out.println("El corredor "+ Thread.currentThread().getName()+" comenzó a correr!");
         int tiempo = r.nextInt(High - Low) + Low;
-        Thread.sleep(tiempo);
+        Thread.sleep(tiempo*1000);
         System.out.println("El corredor "+ Thread.currentThread().getName()+" entregó el testigo en "+tiempo+" segundos!");
         this.testigo.getTestigo().release();
     }
