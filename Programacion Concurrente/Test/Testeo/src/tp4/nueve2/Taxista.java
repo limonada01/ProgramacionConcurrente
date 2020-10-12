@@ -9,9 +9,6 @@ public class Taxista implements Runnable {
         this.taxi = taxi;
     }
 
-    
-
-    
 
     @Override
     public void run() {

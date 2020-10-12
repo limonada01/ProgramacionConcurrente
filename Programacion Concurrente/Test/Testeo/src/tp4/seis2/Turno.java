@@ -8,25 +8,32 @@ public class Turno {
     private Semaphore semC;
 
     public Turno() {
-        this.semA=new Semaphore(1);
-        this.semB=new Semaphore(0);
-        this.semC=new Semaphore(0);
+        this.semA = new Semaphore(1);
+        this.semB = new Semaphore(0);
+        this.semC = new Semaphore(0);
     }
 
-    
-    public void mostrarA() throws InterruptedException{
+    public void mostrarA(int cant) throws InterruptedException {
         this.semA.acquire();
-        System.out.print("A");
+        for (int i = 0; i < cant; i++) {
+            System.out.print("A");
+        }
         this.semB.release();
     }
-    public void mostrarB() throws InterruptedException {
+
+    public void mostrarB(int cant) throws InterruptedException {
         this.semB.acquire();
-        System.out.print("BB");
+        for (int i = 0; i < cant; i++) {
+            System.out.print("B");
+        }
         this.semC.release();
     }
-    public void mostrarC() throws InterruptedException {
+
+    public void mostrarC(int cant) throws InterruptedException {
         this.semC.acquire();
-        System.out.print("CCC");
+        for (int i = 0; i < cant; i++) {
+            System.out.print("C");
+        }
         this.semA.release();
     }
 }

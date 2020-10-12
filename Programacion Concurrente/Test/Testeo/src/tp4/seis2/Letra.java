@@ -2,16 +2,20 @@ package tp4.seis2;
 
 public class Letra implements Runnable {
     private char letter;
-
+    private int cantidadRepeticiones;
     private Turno turno;
 
-    public Letra(char letter, Turno turno) {
+    public Letra(char letter, Turno turno,int cant) {
         this.letter = letter;
         this.turno = turno;
+        this.cantidadRepeticiones=cant;
     }
 
     public Turno getTurno() {
         return this.turno;
+    }
+    public int getCantRepeticiones(){
+        return this.cantidadRepeticiones;
     }
 
     public void mostrar() throws InterruptedException {
@@ -31,9 +35,9 @@ public class Letra implements Runnable {
 
     public static void main(String[] args) throws Exception {
         Turno turno = new Turno();
-        A a = new A('A', turno);
-        B b = new B('B', turno);
-        C c = new C('C', turno);
+        A a = new A('A', turno,1);
+        B b = new B('B', turno,2);
+        C c = new C('C', turno,3);
         Thread aa = new Thread(a, "A");
         Thread bb = new Thread(b, "B");
         Thread cc = new Thread(c, "C");
