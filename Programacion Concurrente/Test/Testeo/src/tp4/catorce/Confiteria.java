@@ -10,11 +10,15 @@ public class Confiteria {
     private Semaphore cocinero;
     private Semaphore beber;
     private Semaphore comer;
+    private Semaphore mozoAtender;
+    private Semaphore cocineroAtender;
     public Confiteria(int sillas){
         this.sillas=sillas;
         this.lockSillas=new ReentrantLock();
         this.mozo=new Semaphore(0);
+        this.mozoAtender=new Semaphore(1);
         this.cocinero=new Semaphore(0);
+        this.cocineroAtender=new Semaphore(1);
         this.beber=new Semaphore(0);
         this.comer=new Semaphore(0);
     }
@@ -30,15 +34,17 @@ public class Confiteria {
         return flag;
     }
 
-    public void pedirBebida(int idEmpleado){
+    public void pedirBebida(int idEmpleado) throws InterruptedException {
         
         System.out.println("Empleado "+idEmpleado+": quiero algo de beber.");
+        this.mozoAtender.acquire();
         this.mozo.release();
 
     }
-    public void pedirComida(int idEmpleado){
+    public void pedirComida(int idEmpleado) throws InterruptedException {
         
         System.out.println("Empleado "+idEmpleado+": quiero algo de comer.");
+        this.cocineroAtender.acquire();
         this.cocinero.release();
 
     }
@@ -47,6 +53,7 @@ public class Confiteria {
         this.mozo.acquire();
         Thread.sleep(5000);
         System.out.println("Mozo: aquí esta su bebida.");
+        this.mozoAtender.release();
         this.beber.release();
         
     }
@@ -54,6 +61,7 @@ public class Confiteria {
         this.cocinero.acquire();
         Thread.sleep(5000);
         System.out.println("Cocinero: aquí esta su comida.");
+        this.cocineroAtender.release();
         this.comer.release();
 
     }
