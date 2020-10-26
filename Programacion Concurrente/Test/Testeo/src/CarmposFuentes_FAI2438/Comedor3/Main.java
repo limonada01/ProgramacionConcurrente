@@ -5,7 +5,7 @@ public class Main {
         int cantPerros=6;
         int cantGatos=6;
         int cantidadComederos=2;
-        Comedor comedor=new Comedor(cantidadComederos);
+        C0medor comedor=new C0medor(cantidadComederos);
         Thread[] gatos=new Thread[cantGatos];
         Thread[] perros=new Thread[cantPerros];
         for(int i=0;i<cantPerros;i++){

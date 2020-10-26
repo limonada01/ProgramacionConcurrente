@@ -5,17 +5,15 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.sound.midi.Soundbank;
 
-public class Comedor {
+public class C0medor {
     private Semaphore comederos;
-    //private Semaphore bandera;
     private int totalComederos;
     private ReentrantLock lock;
     private int flagEspecie=-1;//0 gatos | 1 perros
-    private boolean otraEspecieEspera;
-    private boolean mismaEspecieEspera;
-    public Comedor(int comederos){
+    private boolean otraEspecieEspera;//si hay otra especie intentando entrar y no pudo
+    private boolean mismaEspecieEspera;//si hay de la misma especie intentado entrar y no pudo
+    public C0medor(int comederos){
         this.comederos=new Semaphore(comederos);
-        //this.bandera=new Semaphore(1);
         this.lock=new ReentrantLock();
         this.totalComederos=comederos;
         this.otraEspecieEspera=false;
@@ -31,26 +29,17 @@ public class Comedor {
             if(flagEspecie==-1){
                 flagEspecie=especie;           
             }
-            
-
             flag=true;
-            
         }else{
             if(especie== flagEspecie ){
                 mismaEspecieEspera=true;
             }
             if(especie!= flagEspecie && comederos.availablePermits()==0 ){
                 otraEspecieEspera=true;
-            }
-           /* 
-            if(!mismaEspecieEspera){
-                otraEspecieEspera=true;
-            }*/
-        }
-        
+            }   
+        } 
         lock.unlock();
         return flag;
-        
     }
    
 

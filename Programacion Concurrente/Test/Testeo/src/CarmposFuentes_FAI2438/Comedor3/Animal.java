@@ -5,8 +5,8 @@ package CarmposFuentes_FAI2438.Comedor3;
 public class Animal  {
     private int id;
     private int especie;
-    private Comedor comedor;
-    public Animal(int id,int especie, Comedor comedor){
+    private C0medor comedor;
+    public Animal(int id,int especie, C0medor comedor){
         this.id=id;
         this.especie=especie;
         this.comedor=comedor;
@@ -25,7 +25,7 @@ public class Animal  {
 
   
 
-    public Comedor getComedor() {
+    public C0medor getComedor() {
         return comedor;
     }
 

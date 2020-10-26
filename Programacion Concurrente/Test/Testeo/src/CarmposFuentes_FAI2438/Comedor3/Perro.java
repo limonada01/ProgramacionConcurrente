@@ -1,7 +1,7 @@
 package CarmposFuentes_FAI2438.Comedor3;
 
 public class Perro extends Animal implements Runnable {
-    public Perro(int id, Comedor comedor) {
+    public Perro(int id, C0medor comedor) {
         super(id, 1, comedor);
     }
 
