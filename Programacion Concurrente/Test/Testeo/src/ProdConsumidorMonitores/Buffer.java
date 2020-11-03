@@ -18,25 +18,23 @@ public class Buffer {
     public synchronized void producir(int id) throws InterruptedException {
         synchronized(productor){
             while(actual==tamFinal){
-                productor.wait();
+                this.wait();
             }
             actual++;
             System.out.println("*****Productor "+id+" PUDO PRODUCIR!");
             Thread.sleep(1000);//simulacion para producir
-            consumidor.notify();
-            
-           
+            this.notify();     
         }  
     }
     public synchronized void consumir(int id) throws InterruptedException {
         synchronized(consumidor){
             while(actual==0){
-                consumidor.wait();
+                this.wait();
             }
             actual--;
             System.out.println("Consumidor "+id+" pudo CONSUMIR!*****");
             Thread.sleep(1000); //simula tiempo de consumo
-            productor.notify();
+            this.notify();
         }   
     }
 }
