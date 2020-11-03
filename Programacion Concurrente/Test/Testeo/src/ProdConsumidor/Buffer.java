@@ -8,37 +8,27 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Buffer {
     private Semaphore tamaño;//buffer
     private ReentrantLock mutex;
-    private int total;//total de permisos
-    private int actual;//permisos actuales libres para consumir
-    private Semaphore prod;
+    private Semaphore prod;//sem para producir
     public Buffer(int tam){
         this.tamaño=new Semaphore(tam);
         this.mutex=new ReentrantLock();
-        this.total=tam;
-        this.actual=tam;
         this.prod=new Semaphore(0); 
     }
 
     public void producir(int id) throws InterruptedException {
-        if(actual==total){
-            System.out.println("----> intento de producir!  ++++++++++++BUFFER LLENOO++++++++++++++");
-            prod.acquire();    
-        }
+        prod.acquire();//pide permisos para producir ( no los tendra hastá q tenga espacio para producir (buffer no lleno))
+        mutex.lock();// exclusion mutua       
         tamaño.release();//doy un permiso para consumir
+        Thread.sleep(1000);//simulacion para producir
         System.out.println("*****Productor "+id+" PUDO PRODUCIR!");
-        mutex.lock();
-        this.actual++;
-        mutex.unlock(); 
+        mutex.unlock(); //libero la zona de exclusion para otro hilo
     };
     public void consumir(int id) throws InterruptedException {
-        tamaño.acquire();
-        System.out.println("Consumidor "+id+" pudo CONSUMIR!*****"); 
-        mutex.lock();
-        if(actual==total){
-            System.out.println("++++++++++++BUFFER LIBERADO PARA PRODUCIR++++++++++++++");
-            prod.release();
-        }
-        this.actual--;
-        mutex.unlock();
+        tamaño.acquire();//consumo un producto , en caso de no haber, espera hasta que se pueda tomar 1 permiso ( un productor produzca == libere un permiso)
+        mutex.lock();//exclusion mutua
+        System.out.println("Consumidor "+id+" pudo CONSUMIR!*****");
+        Thread.sleep(1000); //simula tiempo de consumo
+        prod.release();//permite q un productor produzca, ( avisa que hay espacio para producir 1 producto)
+        mutex.unlock();// libero la zona de exclusion para otro hilo
     };
 }
