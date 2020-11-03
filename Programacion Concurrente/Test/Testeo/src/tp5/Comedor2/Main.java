@@ -1,10 +1,10 @@
-package CarmposFuentes_FAI2438.Comedor3;
+package tp5.Comedor2;
 
 public class Main {
     public static void main(String[] args) {
         int cantPerros=6;
-        int cantGatos=6;
-        int cantidadComederos=2;
+        int cantGatos=4;
+        int cantidadComederos=4;
         C0medor comedor=new C0medor(cantidadComederos);
         Thread[] gatos=new Thread[cantGatos];
         Thread[] perros=new Thread[cantPerros];

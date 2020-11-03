@@ -1,4 +1,4 @@
-package CarmposFuentes_FAI2438.Comedor3;
+package tp5.Comedor;
 
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;

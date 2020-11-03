@@ -1,4 +1,4 @@
-package CarmposFuentes_FAI2438.Comedor3;
+package tp5.Comedor2;
 
 public class Gato extends Animal implements Runnable {
     public Gato(int id, C0medor comedor) {
