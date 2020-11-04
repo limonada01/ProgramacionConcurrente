@@ -18,38 +18,52 @@ public class Buffer {
     }
 
     public  void producir(int id) throws InterruptedException {
-        mutex.lock();
+        
         synchronized(productor){
+            
             while(actual==tamFinal){
                 System.out.println("PRODUCTOR A DORMIR!!!");
+                mutex.unlock();
                 productor.wait();
             }
+            
+            mutex.lock();
+            
             actual++;
+            mutex.unlock(); 
             System.out.println("*****Productor "+id+" PUDO PRODUCIR!");
-            Thread.sleep(1000);//simulacion para producir
+              
+        }
             synchronized(consumidor){
             consumidor.notify(); 
             }
-            System.out.println("****");   
-        }
-        mutex.unlock(); 
+            
+            
+        
+        
     }
-    public void consumir(int id) throws InterruptedException {
-        mutex.lock();
+    public  void consumir(int id) throws InterruptedException {
+        
         synchronized(consumidor){
-
+            
             while(actual==0){
                 System.out.println("CONSUMIDOR A DORMIR!!!");
+                
                 consumidor.wait();
             }
+           
+            mutex.lock();
             actual--;
+            mutex.unlock();
             System.out.println("Consumidor "+id+" pudo CONSUMIR!*****");
-            Thread.sleep(1000); //simula tiempo de consumo
-            synchronized(productor){
+            
+        }
+            synchronized(productor){    
             productor.notify();
             }
-            System.out.println("****");
-        }   
-        mutex.unlock();
+            
+            
+           
+        
     }
 }
