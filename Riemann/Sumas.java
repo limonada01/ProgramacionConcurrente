@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Sumas {
     public static void main(String[] args) {
-        java.util.Scanner sc=new Scanner(System.in);
+        Scanner sc=new Scanner(System.in);
         double suma=0;
         double x1, x2, y1, y2, incrementoX, incrementoY, base ,altura,area;
         int n,m;
