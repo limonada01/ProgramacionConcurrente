@@ -23,7 +23,7 @@ public class Buffer {
             
             while(actual==tamFinal){
                 System.out.println("PRODUCTOR A DORMIR!!!");
-                mutex.unlock();
+                
                 productor.wait();
             }
             
