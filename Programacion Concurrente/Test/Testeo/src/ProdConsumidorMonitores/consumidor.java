@@ -18,7 +18,7 @@ public class consumidor implements Runnable {
             while (true) {
                 this.buffer.consumir(id);
                 
-                Thread.sleep(5000);
+                Thread.sleep(1000);
             }
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block

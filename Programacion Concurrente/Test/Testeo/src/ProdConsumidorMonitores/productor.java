@@ -15,7 +15,7 @@ public class productor implements Runnable {
             while(true){
                 buffer.producir(id);
                
-                Thread.sleep(5000);
+                Thread.sleep(1000);
             }
             
         }catch(

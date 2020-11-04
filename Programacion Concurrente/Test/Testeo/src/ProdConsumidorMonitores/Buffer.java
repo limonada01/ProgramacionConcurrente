@@ -10,31 +10,46 @@ public class Buffer {
     private int tamFinal;//buffer
     private Object consumidor=new Object();//para sincronizar consumidores 
     private Object productor=new Object();//para sincronizar productores
+    private ReentrantLock mutex;
     public Buffer(int tam){
         this.actual=tam;
         this.tamFinal=tam;
+        this.mutex=new ReentrantLock();
     }
 
-    public synchronized void producir(int id) throws InterruptedException {
+    public  void producir(int id) throws InterruptedException {
+        mutex.lock();
         synchronized(productor){
             while(actual==tamFinal){
-                this.wait();
+                System.out.println("PRODUCTOR A DORMIR!!!");
+                productor.wait();
             }
             actual++;
             System.out.println("*****Productor "+id+" PUDO PRODUCIR!");
             Thread.sleep(1000);//simulacion para producir
-            this.notify();     
-        }  
+            synchronized(consumidor){
+            consumidor.notify(); 
+            }
+            System.out.println("****");   
+        }
+        mutex.unlock(); 
     }
-    public synchronized void consumir(int id) throws InterruptedException {
+    public void consumir(int id) throws InterruptedException {
+        mutex.lock();
         synchronized(consumidor){
+
             while(actual==0){
-                this.wait();
+                System.out.println("CONSUMIDOR A DORMIR!!!");
+                consumidor.wait();
             }
             actual--;
             System.out.println("Consumidor "+id+" pudo CONSUMIR!*****");
             Thread.sleep(1000); //simula tiempo de consumo
-            this.notify();
+            synchronized(productor){
+            productor.notify();
+            }
+            System.out.println("****");
         }   
+        mutex.unlock();
     }
 }
