@@ -13,7 +13,7 @@ public class Fumador implements Runnable {
         while(true){
             try {
                 sala.entrafumar(id);
-                System.out.println("Fumador " +id+" está fumando.");
+               // System.out.println("Fumador " +id+" está fumando.");
                 Thread.sleep(3000);
                 sala.terminafumar();
             } catch (InterruptedException e) {
