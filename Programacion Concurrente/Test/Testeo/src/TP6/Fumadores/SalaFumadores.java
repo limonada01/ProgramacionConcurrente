@@ -3,12 +3,10 @@ package TP6.Fumadores;
 import java.util.concurrent.Semaphore;
 
 public class SalaFumadores {
-    private Semaphore semCololar;
     private int permiso;// quien puede fumar 1,2,3
     private boolean recurso;
 
     public SalaFumadores() {
-        this.semCololar = new Semaphore(0);
         this.permiso = -1;
         this.recurso = false;
     }
