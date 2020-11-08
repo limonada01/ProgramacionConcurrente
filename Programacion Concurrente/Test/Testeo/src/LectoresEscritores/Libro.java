@@ -22,10 +22,7 @@ public class Libro {
     public boolean finalizado(){
         return cantPaginasEscritas==maxPaginas; //retorna true si estan todas las paginas escritas
     }
-    /* 
-    cuando un escritor1 empieza a escribir y otro escritor2 intenta escribir, cuando el escritor1 termina de escribir pone en falso
-    la bandera que habia activado el escritor2 al intentar escribir, por lo que pierde la prioridad del escritor
-    */
+   
     public synchronized void empezarLeer(int id) throws InterruptedException {
         while(!hayEscrito() || cantLectoresActual>=cantPaginasEscritas || escribirLibro || escribiendo){
             System.out.println("** Lector "+id+" no puede leer aun! **" );
