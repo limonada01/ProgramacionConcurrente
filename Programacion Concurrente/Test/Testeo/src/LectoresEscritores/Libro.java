@@ -36,13 +36,12 @@ public class Libro {
     }
 
     public synchronized void empezarEscribir(int id) throws InterruptedException {
-
-        
         while( cantLectoresActual!=0 || escribiendo ){
             escribirLibro=true;
             System.out.println("** Escritor "+id+" no puede escribir aun! **" );
             this.wait();
         }
+        escribirLibro=false;
         escribiendo=true;
         System.out.println("** Escritor "+id+" empieza a escribir! **" );
     }
@@ -60,7 +59,7 @@ public class Libro {
     public synchronized void terminarEscribir(int id){
         cantPaginasEscritas++;
         System.out.println("** Escritor "+id+" Termina de escribir! **" );
-        escribirLibro=false;
+  
         escribiendo=false;
         notifyAll();
     }

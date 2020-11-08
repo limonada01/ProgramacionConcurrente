@@ -19,7 +19,7 @@ public class Escritor implements Runnable {
                 libro.empezarEscribir(id);
                 Thread.sleep(3000);
                 libro.terminarEscribir(id);
-                Thread.sleep(5000);
+                Thread.sleep(15000);
             }
 
         } catch (InterruptedException e) {
