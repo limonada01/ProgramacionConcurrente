@@ -8,15 +8,12 @@ public class Libro {
     private final int maxPaginas;
     private boolean escribirLibro;//hay un escritor que quiere escribir
     private boolean escribiendo;//hay un escritor escribiendo
-    private ReentrantLock mutexEscritores;
     public Libro(int maxPaginas){
         this.cantPaginasEscritas=0;
         this.cantLectoresActual=0;
         this.maxPaginas=maxPaginas;
         this.escribirLibro=false;
-        this.mutexEscritores=new ReentrantLock();
         this.escribiendo=false;
-
     }
 
     public boolean finalizado(){
