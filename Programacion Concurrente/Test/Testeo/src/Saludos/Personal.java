@@ -33,7 +33,6 @@ public class Personal implements Runnable {
             saludo.saludoJefe();
             
         } else {
-            
             saludo.saludarJefe(nombre);;
         }
 

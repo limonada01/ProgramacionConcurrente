@@ -30,7 +30,6 @@ public class GestorSala {
         jubiladosEsperando++;//un jubilado se pone en espera de prioridad
         while(cantPersonasActual>= limiteActual){
             System.out.println("Jubilado "+id+" a esperar!");
-            
             this.wait();
         }
         jubiladosEsperando--;//pudo acceder

@@ -5,11 +5,12 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Saludo {
     // private Object jefe = new Object();
-    private boolean notificados = false;
     private ReentrantLock mutex = new ReentrantLock();
     private Semaphore empleados = new Semaphore(0);
-    private int llegaron=0;
-    private int numEmp=5;
+    private int llegaron;
+    private int numEmp;
+
+ 
 
     void saludarJefe(String empleado) {// empleado
         try {
@@ -27,8 +28,10 @@ public class Saludo {
 
     synchronized void esperar() {// boss
         try {
+            mutex.lock();
             this.llegaron++;
-            System.out.println("cant llegaro: "+this.llegaron);
+            mutex.unlock();
+           // System.out.println("cant llegaro: "+this.llegaron);
             this.wait();
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
@@ -43,7 +46,8 @@ public class Saludo {
     }
     public boolean verificarLlegada(){
         mutex.lock();
-        boolean res= this.llegaron < (this.numEmp+1);
+        boolean res= this.llegaron < (this.numEmp);
+        System.out.println("llegaron:::::: "+this.llegaron);
         System.out.println("flaaag ***** "+res);
         mutex.unlock();
         return res;

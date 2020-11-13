@@ -23,23 +23,27 @@ public class Sumas {
         altura= Math.abs(y2-y1);
         
 
-        area=base/m * altura/n;
-        incrementoX=base/n;
-        incrementoY=altura/m;
+        area=(base/m) * (altura/n);
+        incrementoX=base/m;
+        incrementoY=altura/n;
         for(int i=1;i<=m;i++){
             for(int j=1;j<=n;j++){
-                
-                suma=suma+ funcion(x1 + incrementoX * i, y1 + incrementoY * j) * area;
+                double resFun=funcion(x1 + incrementoX * i, y1 + incrementoY * j);
+                System.out.println("****   "+resFun);
+                suma=suma+ resFun * area;
 
             }
         }
         System.out.println("El volumen aproximado para M= "+m+" y N= "+n+" ES: "+suma);
 
     }
-    
+    public static double funcion(double x,double y){
+        return 1-(0.5)*Math.pow(x, 2)-(0.5)* Math.pow(y, 2);
+    }
+    /*
     public static double funcion(double x,double y){
         return 16-Math.pow(x, 2)-2* Math.pow(y, 2);
-    }
+    }*/
     /*
     public static double funcion(double x,double y){
         return 4-(Math.pow(x, 2)/2)-(Math.pow(y, 2)/2);
