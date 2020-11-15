@@ -9,7 +9,7 @@ public class Puente {
     private boolean semaforoNorte;
     private boolean semaforoSur;
     private Semaphore flag;
-  
+    private Semaphore mutex;
     
 
     public Puente(int maxSimultaneo){
@@ -19,13 +19,16 @@ public class Puente {
         this.semaforoNorte=false;
         this.semaforoSur=true;//el semaforo arranca en verde para los del Sur
         this.flag=new Semaphore(0);
+        this.mutex=new Semaphore(1);
     }
 
     public boolean pasarNorte(int id) throws InterruptedException {
         boolean exito=false;
    
         if(semaforoNorte && maxNorte.tryAcquire()){
-            
+            mutex.acquire();
+            Thread.sleep(500);
+            mutex.release();
             System.out.println("Auto NORTE "+id+" entra al puente");
             exito=true;
             Thread.sleep(3000);//tarda 3 seg en pasar
@@ -46,6 +49,9 @@ public class Puente {
         boolean exito=false;
   
         if( semaforoSur && maxSur.tryAcquire() ){
+            mutex.acquire();
+            Thread.sleep(500);
+            mutex.release();
             System.out.println("Auto SUR "+id+" entra al puente");
             exito=true;
             Thread.sleep(3000);//tarda 3 seg en pasar
