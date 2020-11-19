@@ -8,34 +8,34 @@ public class Observatorio {
     private int capacidad; // actual
     private int capacidadTotal;//50
     private int capacidadLimitada;// 30
-    private int cantInvestigadoresActual;
     private int cantMantenimientoActual;
     private int cantVisitantesActual;
+    private boolean hayInvestigadorDentro;
    // private Lock lock;
    // private Condition visitantes;
     //private Condition investigadores;
     //private Condition mantenimiento;
-    private boolean investigadorEspera; // si hay un investigador en cola para entrar
+    private boolean investigadorEspera; // hay investigador que quiere entrar
     private boolean visitanteConSilla;// si hay un visitante con silla dentro
 
     public Observatorio(int capacidadTotal, int capacidadLimitada) {
         this.capacidad = capacidadTotal; //actual
         this.capacidadTotal=capacidadTotal;
         this.capacidadLimitada = capacidadLimitada;
-        this.cantInvestigadoresActual = 0;
+        this.hayInvestigadorDentro = false;
         this.cantMantenimientoActual = 0;
         this.cantVisitantesActual = 0;
         /*this.lock = new ReentrantLock();
         this.visitantes = lock.newCondition();
         this.investigadores = lock.newCondition();
         this.mantenimiento = lock.newCondition();*/
-        this.investigadorEspera = false;
+        this.investigadorEspera =false;
         this.visitanteConSilla=false;
     }
 
     public synchronized void entrarVisitante(int id, boolean silla) throws InterruptedException {
        // lock.lock();
-        while (cantVisitantesActual >= capacidad || cantInvestigadoresActual != 0 || cantMantenimientoActual != 0 || investigadorEspera || (silla && visitanteConSilla)) {
+        while (cantVisitantesActual >= capacidad || hayInvestigadorDentro| cantMantenimientoActual != 0 || investigadorEspera || (silla && visitanteConSilla)) {
             if(!silla){
                 System.out.println("El visitante " + id + " debe esperar para entrar");
             }else{
@@ -57,7 +57,7 @@ public class Observatorio {
 
     public synchronized void entrarMantenimiento(int id) throws InterruptedException {
        // lock.lock();
-        while(cantMantenimientoActual>=capacidad || cantVisitantesActual!=0 || cantInvestigadoresActual!=0 || investigadorEspera){
+        while(cantMantenimientoActual>=capacidad || cantVisitantesActual!=0 || hayInvestigadorDentro || investigadorEspera){
             System.out.println("La persona de Mantenimiento " + id + " debe esperar para entrar");
             this.wait();
         }
@@ -68,13 +68,14 @@ public class Observatorio {
 
     public synchronized void entrarInvestigador(int id) throws InterruptedException {
         //lock.lock();
-        while(cantInvestigadoresActual>=capacidad || cantVisitantesActual!=0 || cantMantenimientoActual!=0 ){
+        while(hayInvestigadorDentro || cantVisitantesActual!=0 || cantMantenimientoActual!=0 ){
             System.out.println("El investigador " + id + " debe esperar para entrar");
             investigadorEspera=true;
             this.wait();
         }
+        hayInvestigadorDentro=true;
         investigadorEspera=false;
-        cantInvestigadoresActual++;
+
         System.out.println("El Investigador " + id + " logró entrar!");
         //lock.unlock();
     }
@@ -100,7 +101,7 @@ public class Observatorio {
     }
 
     public synchronized void salirInvestigador(int id) {
-        cantInvestigadoresActual--;
+        hayInvestigadorDentro=false;
         System.out.println("El investigador "+id+" logra salir y deja un lugar");        
         this.notifyAll();
     }   
