@@ -35,13 +35,12 @@ public class Centro {
                 System.out.println("La persona "+id+" no puede tomar una revista y se pone a ver el noticiero");
                 noticiero.await();//pone a esperar a la persona viendo el noticiero ya que aun no puede tomar una revista
             }
-
             revistasActual++;//toma una revista
             System.out.println("La persona "+id+" logra tomar una revista y se pone a leer");
             leyendo.await();//pone a esperar a la persona con la revista
             revistasActual--;//devuelve la revista para que otro pueda tomarla
             System.out.println("La persona "+id+" devuelve la revista para que otro la tome");
-            noticiero.signal();//avisa a los que estan viendo el noticiero para que pueda tomar la revista
+            noticiero.signalAll();//avisa a los que estan viendo el noticiero para que pueda tomar la revista
         }
         camillasActual++;
         System.out.println("La persona "+id+" consigue una camilla para donar sangre");
