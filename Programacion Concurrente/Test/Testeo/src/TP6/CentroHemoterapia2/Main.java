@@ -1,4 +1,4 @@
-package tp5.CentroHemoterapia2;
+package TP6.CentroHemoterapia2;
 
 public class Main {
     public static void main(String[] args) {

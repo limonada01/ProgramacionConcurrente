@@ -1,4 +1,4 @@
-package tp5.CentroHemoterapia2;
+package TP6.CentroHemoterapia2;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;

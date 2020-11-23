@@ -1,4 +1,4 @@
-package tp5.CentroHemoterapia;
+package TP6.CentroHemoterapia;
 
 public class Persona implements Runnable {
     private int id;
