@@ -56,9 +56,9 @@ public class GestionaTrafico {
         System.out.println(" El auto "+id+" sale del puente. Viene del NORTE *** ");
         this.notifyAll();//notifica a los autos que estan esperando para salir 
         
-        if(cambiarSemaforo && cantEnPuenteActual==0){
+        if(cambiarSemaforo && cantEnPuenteActual==0){//verifico si debo cambiar semaforo y espero que el puente este vacio
             cambiarSemaforo();//pone en verde el semaforo de la otra direccion
-        }else if(!cambiarSemaforo && cantPasaron>=maxAutosPuente && !otraDireccionEspera){
+        }else if(!cambiarSemaforo && cantPasaron>=maxAutosPuente && !otraDireccionEspera){// cobra sentido cuando no quedan mas autos de la otra direccion esperando por pasar
             cantPasaron--;
             this.notifyAll();
         }
