@@ -26,50 +26,66 @@ public class Simpson {
         
         nodosX=m+1;
         nodosY=n+1;
-        
-        float[][] datos=new float[nodosY][nodosX];
-        
-        for(int i=0;i<nodosY;i++){
-            for(int j=0;j<nodosX;j++){
-                datos[i][j]=f(h*j,k*i);//calculo f(x0,y0) de cada nodo y lo almaceno en la matriz de datos
+        if(nodosX%2==1 && nodosY%2==1){
+            float[][] datos=new float[nodosY][nodosX];
+            float x0=a;
+            float y0=c; 
+            for(int i=0;i<nodosY;i++){
+                for(int j=0;j<nodosX;j++){
+                    datos[i][j]=f(x0+h*j,y0+k*i);//calculo f(x0,y0) de cada nodo y lo almaceno en la matriz de datos
+                }
             }
-        }
-        //primera aplicacion , (areas)
-        System.out.println("\n Matriz de datos:\n");
-        for(int i=0;i<nodosY;i++){
-            System.out.println();
-            for(int j=0;j<nodosX;j++){
-                System.out.print(datos[i][j]+" ");
+            //primera aplicacion , (areas)
+           
+            System.out.println("\n Matriz de datos:\n");
+            for(int i=0;i<nodosY;i++){
+                System.out.println();
+                for(int j=0;j<nodosX;j++){
+                    System.out.print(datos[i][j]+" ");
+                }
             }
+            float[] areas=new float[nodosY];//por filas
+            for(int i=0;i<areas.length;i++){
+                areas[i]= calculoSimpson1(h, datos, i); //areas
+
+            }
+            System.out.println("\n Areas obtenidas de la primera aplicacion: ");
+            for(int i=0;i<nodosY;i++){
+                System.out.println(areas[i]);
+            }
+            System.out.println("");
+
+            float resultado= calculoSimpson2(k, areas);
+            System.out.println("RESULTADO FINAL (VOLUMEN): "+resultado);
+        }else{
+            System.out.println("No cumple la restriccion");
         }
-        float[] areas=new float[nodosY];//por filas
-        for(int i=0;i<areas.length;i++){
-            areas[i]= calculoSimpson1(h, datos, i); //areas
-            
-        }
-        System.out.println("\n Areas obtenidas de la primera aplicacion: ");
-        for(int i=0;i<nodosY;i++){
-            System.out.println(areas[i]);
-        }
-        System.out.println("");
-        
-        float resultado= calculoSimpson2(k, areas);
-        System.out.println("RESULTADO FINAL (VOLUMEN): "+resultado);
-    }
+    }/*
+    public static float f(float x,float y){
+
+        return (float) (Math.pow(Math.E, y-x));
+    }*/
+    /*
+    public static float f(float x,float y){
+
+        return (float) (x*Math.pow(y, 2));
+    }*/
+    
     /*
     public static float f(float x,float y){
 
         return (float) (Math.pow(x, 2)+Math.pow(y, 2));
-
-    }*/
+    }
+    */
     /*
     public static float f(float x,float y){
 
         return (float) Math.log(x+2*y);
     }*/
+    
     public static float f(float x,float y){
 
-        return (float) Math.log(x+2*y);
+        return (float) x-2*y;
     }
     public static float sumatoriaImpar(float[][] datos,int fila){
         float res=0;

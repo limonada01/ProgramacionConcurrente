@@ -1,4 +1,4 @@
-package src;
+
 
 import java.util.Scanner;
 
@@ -30,10 +30,11 @@ public class Trapecios {
         nodosY=n+1;
         
         float[][] datos=new float[nodosY][nodosX];
-        
+        float x0=a;
+        float y0=c;     
         for(int i=0;i<nodosY;i++){
             for(int j=0;j<nodosX;j++){
-                datos[i][j]=f(h*j,k*i);//calculo f(x0,y0) de cada nodo y lo almaceno en la matriz de datos
+                datos[i][j]=f(x0+h*j,y0+k*i);//calculo f(x0,y0) de cada nodo y lo almaceno en la matriz de datos
             }
         }
         //primera aplicacion , (areas)
@@ -58,15 +59,20 @@ public class Trapecios {
         float resultado= calculoTrapecio2(k, areas);
         System.out.println("RESULTADO FINAL (VOLUMEN): "+resultado);
     }
-    
+    /*
     public static float f(float x,float y){
 
         return (float) (Math.pow(x, 2)+Math.pow(y, 2));
-    }/*
+    }*/
+    /*
     public static float f(float x,float y){
 
         return (float) Math.log(x+2*y);
     }*/
+    public static float f(float x,float y){
+
+        return (float) x-2*y;
+    }
     public static float sumatoria(float[][] datos,int fila){
         float res=0;
         int posUltimoNodo=datos[0].length-1;
@@ -89,5 +95,7 @@ public class Trapecios {
     public static float calculoTrapecio2(float k,float[] areas){
         return (float) ((k/2)*(areas[0]+2*sumatoria(areas)+areas[areas.length-1])) ;
     }
+    
+    
     
 }
