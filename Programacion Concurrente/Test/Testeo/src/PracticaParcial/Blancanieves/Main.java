@@ -3,7 +3,7 @@ package PracticaParcial.Blancanieves;
 public class Main {
     public static void main(String[] args) {
         int cantSillas=4;
-        int cantEnanos=4;
+        int cantEnanos=7;
         Casa casa=new Casa(cantSillas);
         Thread bn=new Thread(new Blancanieve(1, casa));
         bn.start();

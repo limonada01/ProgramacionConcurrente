@@ -24,10 +24,10 @@ public class Casa {
         mutex.acquire();// exclusion Mutua
 
         System.out.println(" **** Enano " + id + " consigue una silla y avisa que le den de comer");
+        cantServir++;
         if (paseando) {
             pasea.release();
         }
-        cantServir++;
         cocinar.release();
 
         mutex.release();// exclusion Mutua

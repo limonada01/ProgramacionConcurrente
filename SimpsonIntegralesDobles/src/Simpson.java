@@ -56,15 +56,21 @@ public class Simpson {
         float resultado= calculoSimpson2(k, areas);
         System.out.println("RESULTADO FINAL (VOLUMEN): "+resultado);
     }
-    
+    /*
     public static float f(float x,float y){
 
         return (float) (Math.pow(x, 2)+Math.pow(y, 2));
-    }/*
+
+    }*/
+    /*
     public static float f(float x,float y){
 
         return (float) Math.log(x+2*y);
     }*/
+    public static float f(float x,float y){
+
+        return (float) Math.log(x+2*y);
+    }
     public static float sumatoriaImpar(float[][] datos,int fila){
         float res=0;
         int posUltimoNodo=datos[0].length-1;

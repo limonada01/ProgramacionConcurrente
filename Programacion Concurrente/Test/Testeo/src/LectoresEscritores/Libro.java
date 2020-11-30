@@ -16,12 +16,12 @@ public class Libro {
         this.escribiendo=false;
     }
 
-    public boolean finalizado(){
+    public synchronized boolean finalizado(){
         return cantPaginasEscritas==maxPaginas; //retorna true si estan todas las paginas escritas
     }
    
     public synchronized void empezarLeer(int id) throws InterruptedException {
-        while(!hayEscrito() || cantLectoresActual>=cantPaginasEscritas || escribirLibro || escribiendo){
+        while(!hayEscrito() || escribirLibro || escribiendo){
             System.out.println("** Lector "+id+" no puede leer aun! **" );
             this.wait();  
         }
