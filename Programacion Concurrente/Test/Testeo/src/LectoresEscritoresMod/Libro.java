@@ -10,27 +10,18 @@ public class Libro {
     private final int maxPaginas;
     private ReadWriteLock lock;
     
-    public Libro(int maxPaginas){
+    public Libro(int maxPaginas,int cantPaginasEscritas){
+        this.cantPaginasEscritas=cantPaginasEscritas;
         this.maxPaginas=maxPaginas;
-        this.cantPaginasEscritas=0;
         this.lock=new ReentrantReadWriteLock();
     }
    
-    public boolean empezarLeer(int id) throws InterruptedException {
-        boolean exito=false;
+    public void empezarLeer(int id) throws InterruptedException {
         lock.readLock().lock();
-        if(cantPaginasEscritas!=0){
-            exito=true;
-            System.out.println("** Lector "+id+" empieza a leer! **" );
-        }else{
-            System.out.println("Lector "+id+": *** NO HAY PAGINAS ESCRITAS! ****");
-            lock.readLock().unlock();
-        }
-        
-        return exito;
+        System.out.println("** Lector "+id+" empieza a leer! **" );
     }
 
-    public  boolean empezarEscribir(int id) throws InterruptedException {
+    public boolean empezarEscribir(int id) throws InterruptedException {
         boolean exito=false;
         lock.writeLock().lock();
         if(cantPaginasEscritas<maxPaginas){

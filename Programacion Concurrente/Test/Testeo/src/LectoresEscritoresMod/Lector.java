@@ -13,14 +13,10 @@ public class Lector implements Runnable {
     public void run() {
         try {
             while (true) {
-                if (libro.empezarLeer(id)) {
-                    Thread.sleep(3000);
-                    libro.terminarLeer(id);
-                    Thread.sleep(7000);
-                }else{
-                    Thread.sleep(4000);
-                }
-                
+                libro.empezarLeer(id); 
+                Thread.sleep(3000);
+                libro.terminarLeer(id);
+                Thread.sleep(7000);
             }
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block

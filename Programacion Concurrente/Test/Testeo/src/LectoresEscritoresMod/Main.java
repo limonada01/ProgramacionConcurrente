@@ -3,9 +3,10 @@ package LectoresEscritoresMod;
 public class Main {
     public static void main(String[] args) {
         int maxPaginas=10;
+        int cantPaginasEscritas=1;
         int cantEscritores=2;
         int cantLectores=4;
-        Libro libro=new Libro(maxPaginas);
+        Libro libro=new Libro(maxPaginas,cantPaginasEscritas);
 
         Thread[] escritores= new Thread[maxPaginas];
         Thread[] lectores=new Thread[cantLectores];

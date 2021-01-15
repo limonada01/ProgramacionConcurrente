@@ -85,7 +85,7 @@ public class Simpson {
     
     public static float f(float x,float y){
 
-        return (float) x-2*y;
+        return (float) (Math.pow(x, 2)*Math.pow(y, 3));
     }
     public static float sumatoriaImpar(float[][] datos,int fila){
         float res=0;
