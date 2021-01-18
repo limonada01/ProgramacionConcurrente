@@ -8,12 +8,11 @@ public class Pasajero implements Runnable {
     private Vuelo vuelo;// para test seran 2 vuelos representados por un numero del 1 al 2 asignado en el aeropuerto
     private Aeropuerto aeropuerto;
     private char terminal;
-
+    private Reloj reloj;
     Random random=new Random();
-    public Pasajero(int id){
+    public Pasajero(int id,Reloj reloj){
         this.id=id;
-        
-       
+        this.reloj=reloj;
        
     }
 
