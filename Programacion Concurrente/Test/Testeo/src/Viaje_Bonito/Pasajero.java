@@ -4,27 +4,29 @@ import java.util.Random;
 
 public class Pasajero implements Runnable {
     private int id;
-    private int aerolinea;// para test seran 3 aerolineas representadas por un numero del 1 al 3 asignado en el aeropuerto
-    private int vuelo;// para test seran 2 vuelos representados por un numero del 1 al 2 asignado en el aeropuerto
+    private Aerolinea aerolinea;// para test seran 3 aerolineas representadas por un numero del 1 al 3 asignado en el aeropuerto
+    private Vuelo vuelo;// para test seran 2 vuelos representados por un numero del 1 al 2 asignado en el aeropuerto
     private Aeropuerto aeropuerto;
-    private PuestoAtencion puestoAtencion;
+    private char terminal;
+
     Random random=new Random();
-    public Pasajero(int id, Aeropuerto aeropuerto){
+    public Pasajero(int id){
         this.id=id;
-        this.aeropuerto=aeropuerto; 
-        this.aerolinea=random.nextInt(aeropuerto.getNumeroAerolineas())+1;
-        this.vuelo=random.nextInt(2)+1;
+        
+       
+       
     }
 
     @Override
     public void run() {
-        try{ 
-            this.puestoAtencion=aeropuerto.ingresarPuestoDeInforme(id,aerolinea);//entrar al puesto informe
+        try{
+            int nroAerolinea=random.nextInt(aeropuerto.getNumeroAerolineas()); 
+            this.aerolinea=aeropuerto.ingresarPuestoDeInforme(id,nroAerolinea);//entrar al puesto informe
             Thread.sleep(2000);//simulo tiempo dentro
             aeropuerto.salirPuestoDeInforme(id);//salir del puesto informe
-            puestoAtencion.realizarCheckIn(id);//entra a puesto de atencion de la aerolinea
+            vuelo=aerolinea.realizarCheckIn(id);//entra a puesto de atencion de la aerolinea
             Thread.sleep(2000);//simulo tiempo dentro
-            puestoAtencion.terminarCheckIn(id);//sale del puesto de atencion
+            aerolinea.terminarCheckIn(id);//sale del puesto de atencion
        }catch(Exception e){
             e.getStackTrace();
 
@@ -38,33 +40,26 @@ public class Pasajero implements Runnable {
     }
 
     
-    public int getAerolinea() {
+    public Aerolinea getAerolinea() {
         return aerolinea;
     }
 
-    public void setAerolinea(int aerolinea) {
+    public void setAerolinea(Aerolinea aerolinea) {
         this.aerolinea = aerolinea;
     }
 
-    public int getVuelo() {
+    public Vuelo getVuelo() {
         return vuelo;
     }
 
-    public void setVuelo(int vuelo) {
+    public void setVuelo(Vuelo vuelo) {
         this.vuelo = vuelo;
     }
 
     public Aeropuerto getAeropuerto() {
         return aeropuerto;
     }
-
-    public PuestoAtencion getPuestoAtencion() {
-        return puestoAtencion;
-    }
-
-    public void setPuestoAtencion(PuestoAtencion puestoAtencion) {
-        this.puestoAtencion = puestoAtencion;
-    }
+   
 
    
 }

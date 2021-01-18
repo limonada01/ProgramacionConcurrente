@@ -5,21 +5,21 @@ import java.util.concurrent.Semaphore;
 
 public class Aeropuerto {
     
-    private int numeroAerolineas;
+    
     private Semaphore semPuestoInforme=new Semaphore(1);
-    private PuestoAtencion[] puestosDeAtencion;
-
-    public Aeropuerto(int numeroAerolineas, PuestoAtencion[] puestos){
-        this.numeroAerolineas=numeroAerolineas;
+    private Aerolinea[] puestosDeAtencion;
+    //private Random random=new Random();
+    public Aeropuerto( Aerolinea[] puestos){
+        
         this.puestosDeAtencion=puestos;
 
     }
 
-    public PuestoAtencion ingresarPuestoDeInforme(int id,int aerolinea) throws InterruptedException {
-        PuestoAtencion retorno;
+    public Aerolinea ingresarPuestoDeInforme(int id,int nroAerolinea) throws InterruptedException {
+        Aerolinea retorno;
         semPuestoInforme.acquire();
         System.out.println("*** El pasajero número "+id+" ha ingresado al puesto de informe y se le informó sobre su puesto de atención");
-        retorno= puestosDeAtencion[aerolinea];
+        retorno= puestosDeAtencion[nroAerolinea];//retorna Vuelo 
         return retorno;
     }
     public void salirPuestoDeInforme(int id) throws InterruptedException {
@@ -31,9 +31,9 @@ public class Aeropuerto {
 
 
     public int getNumeroAerolineas(){
-        return this.numeroAerolineas;
+        return this.puestosDeAtencion.length;
     }
     
-
+    
 
 }
