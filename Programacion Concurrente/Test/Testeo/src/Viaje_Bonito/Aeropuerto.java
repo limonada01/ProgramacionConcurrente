@@ -11,19 +11,26 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Aeropuerto {
     private boolean abierto = false;
     private Lock lock;
+    private Lock lockTren;
     private Condition aeropuertoCerrado;
-    private CyclicBarrier barreraTren;
-    private Semaphore semTren;
+    private Condition trenEspera;
+    private int capacidadMaxTren;
+    private int cantActualEnTren=0;
+    private boolean trenViajando=false;
+    //private Semaphore semTren;
 
     // private Semaphore semPuestoInforme=new Semaphore(1);
     private Aerolinea[] aerolineas;
 
     public Aeropuerto(Aerolinea[] aerolineas, int capacidadMaxTren) {
         this.lock = new ReentrantLock();
+        this.lockTren=new ReentrantLock();
         this.aeropuertoCerrado = lock.newCondition();
+        this.trenEspera=lockTren.newCondition();
         this.aerolineas = aerolineas;
-        this.barreraTren = new CyclicBarrier(capacidadMaxTren);
-        this.semTren = new Semaphore(1);
+        this.capacidadMaxTren=capacidadMaxTren;
+        
+        //this.semTren = new Semaphore(1);
     }
 
     public Aerolinea ingresarPuestoDeInforme(int id, int nroAerolinea) throws InterruptedException {
@@ -59,15 +66,38 @@ public class Aeropuerto {
     }
 
     public void subirAlTren(int id) throws InterruptedException, BrokenBarrierException {
-        semTren.acquire();
-        System.out.println("** Pasajero "+id+" sube al tren y espera ** ");
-        semTren.release();
-        barreraTren.await();
+        lockTren.lock();
+ 
+        while(trenViajando || cantActualEnTren >= capacidadMaxTren){//si el tren está viajando o ya está lleno deberá esperar
+            System.out.println("** Pasajero "+id+" espera para subir al Tren ** ");
+            trenEspera.await();
+            trenEspera.signal();//en cadena
+        }
+        cantActualEnTren++;
+        System.out.println("El pasajero "+id+" consigue subir al tren y espera a que parta");
+        if(cantActualEnTren == capacidadMaxTren){// falta hacer que arranque desp de determinado tiempo si aun no se llena!!
+            comenzarRecorridoTren();//comienza el viaje
+        }
+        lockTren.unlock();
     }
 
     public int getNumeroAerolineas(){
         return this.aerolineas.length;
     }
 
+    public void comenzarRecorridoTren(){
+        this.trenViajando=true;
+        // aca debo darle la funcionalidad al tren cuando ya está lleno y listo para arrancar
+    }
+
     
+    public void trenListoParaQueSuban(){
+        this.trenViajando=false;
+    }
+
+    public void bajarDelTren(int id){
+        System.out.println("** El pasajero "+id+" baja del tren! **");
+        cantActualEnTren--;
+
+    }
 }
