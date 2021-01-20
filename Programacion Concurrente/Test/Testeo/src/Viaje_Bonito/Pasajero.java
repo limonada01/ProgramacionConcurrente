@@ -26,6 +26,7 @@ public class Pasajero implements Runnable {
             vuelo=aerolinea.realizarCheckIn(id);//entra a puesto de atencion de la aerolinea
             Thread.sleep(2000);//simulo tiempo dentro
             aerolinea.terminarCheckIn(id);//sale del puesto de atencion
+           
        }catch(Exception e){
             e.getStackTrace();
 
