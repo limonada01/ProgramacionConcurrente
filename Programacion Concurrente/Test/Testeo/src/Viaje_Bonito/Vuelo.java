@@ -3,9 +3,9 @@ package Viaje_Bonito;
 public class Vuelo {
 
     private int horario;
-    private int terminal;
+    private char terminal;
     private int puertoEmbarque;
-    public Vuelo(int horario, int terminal,int puertoEmbarque){
+    public Vuelo(int horario, char terminal,int puertoEmbarque){
         
         this.horario=horario;
         this.terminal=terminal;

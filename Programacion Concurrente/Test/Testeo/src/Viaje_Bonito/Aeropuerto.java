@@ -16,7 +16,16 @@ public class Aeropuerto {
     private Condition trenEspera;
     private int capacidadMaxTren;
     private int cantActualEnTren=0;
+    private int bajanEnA=0;
+    private int bajanEnB=0;
+    private int bajanEnC=0;
     private boolean trenViajando=false;
+    private Semaphore trenListoParaSalir;
+    private Semaphore bajarA;
+    private Semaphore bajarB;
+    private Semaphore bajarC;
+    private Semaphore esperarBajenTren;//esperar que los pasajeros bajen del tren en una terminal
+    
     //private Semaphore semTren;
 
     // private Semaphore semPuestoInforme=new Semaphore(1);
@@ -29,7 +38,11 @@ public class Aeropuerto {
         this.trenEspera=lockTren.newCondition();
         this.aerolineas = aerolineas;
         this.capacidadMaxTren=capacidadMaxTren;
-        
+        this.trenListoParaSalir=new Semaphore(0);
+        this.bajarA=new Semaphore(0);
+        this.bajarB=new Semaphore(0);
+        this.bajarC=new Semaphore(0);
+        this.esperarBajenTren=new Semaphore(0);
         //this.semTren = new Semaphore(1);
     }
 
@@ -76,7 +89,7 @@ public class Aeropuerto {
         cantActualEnTren++;
         System.out.println("El pasajero "+id+" consigue subir al tren y espera a que parta");
         if(cantActualEnTren == capacidadMaxTren){// falta hacer que arranque desp de determinado tiempo si aun no se llena!!
-            comenzarRecorridoTren();//comienza el viaje
+            trenListoParaSalir.release();//habilito el metodo comenzarRecorridoTren que ejecuta el hilo Tren
         }
         lockTren.unlock();
     }
@@ -85,19 +98,80 @@ public class Aeropuerto {
         return this.aerolineas.length;
     }
 
-    public void comenzarRecorridoTren(){
+    public void comenzarRecorridoTren() throws InterruptedException {
+        trenListoParaSalir.acquire();
         this.trenViajando=true;
+        System.out.println("*El Tren comienza su recorrido hacia las Terminales*");
         // aca debo darle la funcionalidad al tren cuando ya está lleno y listo para arrancar
     }
+
 
     
     public void trenListoParaQueSuban(){
         this.trenViajando=false;
     }
 
-    public void bajarDelTren(int id){
-        System.out.println("** El pasajero "+id+" baja del tren! **");
+    public synchronized void bajarEnA(int id) throws InterruptedException {
+        bajarA.acquire();
+        System.out.println("** El pasajero "+id+" baja del tren en la Estacion A! **");
         cantActualEnTren--;
-
+        bajanEnA--;
+        if(bajanEnA==0){
+            esperarBajenTren.release();
+        }
+        
     }
+    public synchronized void bajarEnB(int id) throws InterruptedException {
+        bajarB.acquire();
+        System.out.println("** El pasajero "+id+" baja del tren en la Estacion B! **");
+        cantActualEnTren--;
+        bajanEnB--;
+        if(bajanEnB==0){
+            esperarBajenTren.release();
+        }
+        
+    }
+    public synchronized void bajarEnC(int id) throws InterruptedException {
+        bajarC.acquire();
+        System.out.println("** El pasajero "+id+" baja del tren en la Estacion C! **");
+        cantActualEnTren--;
+        bajanEnC--;
+        if(bajanEnC==0){
+            esperarBajenTren.release();
+        }
+    }
+
+    public void esperarQueBajenDelTren() throws InterruptedException {
+        this.esperarBajenTren.acquire();
+    }
+
+    public void abrirPuertasEnA(){
+        System.out.println("Tren abre las puertas en terminal A para que bajen los pasajeros");
+        bajarA.release();
+    }
+    public void abrirPuertasEnB(){
+        System.out.println("Tren abre las puertas en terminal B para que bajen los pasajeros");
+        bajarB.release();
+    }
+    public void abrirPuertasEnC(){
+        System.out.println("Tren abre las puertas en terminal C para que bajen los pasajeros");
+        bajarC.release();
+    }
+
+    
+
+    public int getBajanEnA() {
+        return bajanEnA;
+    }
+
+    public int getBajanEnB() {
+        return bajanEnB;
+    }
+
+    public int getBajanEnC() {
+        return bajanEnC;
+    }
+
+    
+    
 }

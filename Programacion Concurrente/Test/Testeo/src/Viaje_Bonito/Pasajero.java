@@ -10,10 +10,20 @@ public class Pasajero implements Runnable {
     private char terminal;
     private Reloj reloj;
     Random random=new Random();
+    
     public Pasajero(int id,Reloj reloj){
         this.id=id;
         this.reloj=reloj;
        
+    }
+
+    public void bajarDelTren() throws InterruptedException {
+        char terminal= (char) vuelo.getTerminal();
+        switch(terminal){
+            case 'a':aeropuerto.bajarEnA(id);break;
+            case 'b':aeropuerto.bajarEnB(id);break;
+            case 'c':aeropuerto.bajarEnC(id);break;
+        }
     }
 
     @Override
@@ -26,7 +36,8 @@ public class Pasajero implements Runnable {
             vuelo=aerolinea.realizarCheckIn(id);//entra a puesto de atencion de la aerolinea
             Thread.sleep(2000);//simulo tiempo dentro
             aerolinea.terminarCheckIn(id);//sale del puesto de atencion
-           
+            aeropuerto.subirAlTren(id);
+            bajarDelTren();
        }catch(Exception e){
             e.getStackTrace();
 
