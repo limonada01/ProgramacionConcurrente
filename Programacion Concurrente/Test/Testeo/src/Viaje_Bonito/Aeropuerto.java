@@ -24,19 +24,19 @@ public class Aeropuerto {
     private Semaphore bajarA;
     private Semaphore bajarB;
     private Semaphore bajarC;
-    private Semaphore esperarBajenTren;//esperar que los pasajeros bajen del tren en una terminal
-    
+    private Semaphore esperarBajenTren;//esperar que los pasajeros bajen del tren en una terminal 
     //private Semaphore semTren;
-
     // private Semaphore semPuestoInforme=new Semaphore(1);
     private Aerolinea[] aerolineas;
+    private Terminal[] terminales;
 
-    public Aeropuerto(Aerolinea[] aerolineas, int capacidadMaxTren) {
+    public Aeropuerto(Aerolinea[] aerolineas,Terminal[] terminales, int capacidadMaxTren) {
+        this.aerolineas = aerolineas;
+        this.terminales=terminales;
         this.lock = new ReentrantLock();
         this.lockTren=new ReentrantLock();
         this.aeropuertoCerrado = lock.newCondition();
         this.trenEspera=lockTren.newCondition();
-        this.aerolineas = aerolineas;
         this.capacidadMaxTren=capacidadMaxTren;
         this.trenListoParaSalir=new Semaphore(0);
         this.bajarA=new Semaphore(0);
@@ -98,7 +98,7 @@ public class Aeropuerto {
         return this.aerolineas.length;
     }
 
-    public void comenzarRecorridoTren() throws InterruptedException {
+    public void transporteATerminal() throws InterruptedException {
         trenListoParaSalir.acquire();
         this.trenViajando=true;
         System.out.println("*El Tren comienza su recorrido hacia las Terminales*");
@@ -111,7 +111,8 @@ public class Aeropuerto {
         this.trenViajando=false;
     }
 
-    public synchronized void bajarEnA(int id) throws InterruptedException {
+    public synchronized Terminal bajarEnA(int id) throws InterruptedException {
+        Terminal retorno=null;
         bajarA.acquire();
         System.out.println("** El pasajero "+id+" baja del tren en la Estacion A! **");
         cantActualEnTren--;
@@ -119,9 +120,11 @@ public class Aeropuerto {
         if(bajanEnA==0){
             esperarBajenTren.release();
         }
-        
+        retorno=this.terminales[1];//1 terminal A
+        return retorno;
     }
-    public synchronized void bajarEnB(int id) throws InterruptedException {
+    public synchronized Terminal bajarEnB(int id) throws InterruptedException {
+        Terminal retorno=null;
         bajarB.acquire();
         System.out.println("** El pasajero "+id+" baja del tren en la Estacion B! **");
         cantActualEnTren--;
@@ -129,9 +132,11 @@ public class Aeropuerto {
         if(bajanEnB==0){
             esperarBajenTren.release();
         }
-        
+        retorno=this.terminales[2];// 2 terminal B
+        return retorno;
     }
-    public synchronized void bajarEnC(int id) throws InterruptedException {
+    public synchronized Terminal bajarEnC(int id) throws InterruptedException {
+        Terminal retorno=null;
         bajarC.acquire();
         System.out.println("** El pasajero "+id+" baja del tren en la Estacion C! **");
         cantActualEnTren--;
@@ -139,6 +144,8 @@ public class Aeropuerto {
         if(bajanEnC==0){
             esperarBajenTren.release();
         }
+        retorno=this.terminales[3];// 3 terminal C
+        return retorno;
     }
 
     public void esperarQueBajenDelTren() throws InterruptedException {

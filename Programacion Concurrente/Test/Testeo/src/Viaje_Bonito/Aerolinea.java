@@ -11,13 +11,15 @@ public class Aerolinea {
     private int max;// cantidad maxima de personas dentro del puesto de atencion
     private int cantidadActual=0;
     private Cola ordenDeLlegada;
+    private static Reloj reloj;
 
     //private Condition hallEspera;
-    public Aerolinea(int nroAerolinea,Vuelo[] vuelos,int max ){
+    public Aerolinea(int nroAerolinea,Vuelo[] vuelos,int max, Reloj reloj){
         this.numeroAerolinea=nroAerolinea;
         this.vuelos=vuelos;
         this.max=max;
         this.ordenDeLlegada=new Cola();
+        this.reloj=reloj;
     }
 
     public synchronized Vuelo realizarCheckIn(int id) throws InterruptedException {
@@ -46,9 +48,21 @@ public class Aerolinea {
     }
 
     public Vuelo asignarVuelo(){//el vuelo debe estar sujeto a la hora actual y horario de salida del vuelo
-        Random random=new Random();
-        return vuelos[random.nextInt(vuelos.length)];
-        // METODO TEMPORAL, DEBE SER ARREGLADO!!
+        
+        Vuelo vuelo=null;
+        int cantVuelos=vuelos.length;
+        boolean buscando=true;
+        int i=0;
+        while(buscando || cantVuelos!=i){
+            if(vuelos[i].getHorario()>= reloj.getHora()+200){
+                //si el horario del vuelo es en 2 horas o mas, se lo asigno al pasajero, siempre debe haber un VUELO sino el programa se ROMPERA!
+                vuelo=vuelos[i];
+                buscando=false;
+            }
+            i++;
+        }
+        return vuelo;
+
     }
 
 }

@@ -4,9 +4,9 @@ public class Reloj implements Runnable {
     int hora;
     Aeropuerto aeropuerto;
 
-    public Reloj(Aeropuerto aeropuerto) {
+    public Reloj(/*Aeropuerto aeropuerto*/) {
         this.hora = 0000;
-        this.aeropuerto = aeropuerto;
+        //this.aeropuerto = aeropuerto;
     }
 
     public void hacerFuncionar() {
@@ -35,5 +35,10 @@ public class Reloj implements Runnable {
     
     public int getHora(){
         return hora;
+    }
+
+
+    public void setAeropuerto(Aeropuerto aeropuerto) {
+        this.aeropuerto = aeropuerto;
     }
 }

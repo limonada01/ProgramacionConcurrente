@@ -17,13 +17,15 @@ public class Pasajero implements Runnable {
        
     }
 
-    public void bajarDelTren() throws InterruptedException {
+    public Terminal bajarDelTren() throws InterruptedException {
+        Terminal retorno=null;
         char terminal= (char) vuelo.getTerminal();
         switch(terminal){
-            case 'a':aeropuerto.bajarEnA(id);break;
-            case 'b':aeropuerto.bajarEnB(id);break;
-            case 'c':aeropuerto.bajarEnC(id);break;
+            case 'a':retorno=aeropuerto.bajarEnA(id);break;
+            case 'b':retorno=aeropuerto.bajarEnB(id);break;
+            case 'c':retorno=aeropuerto.bajarEnC(id);break;
         }
+        return retorno;
     }
 
     @Override
@@ -37,7 +39,13 @@ public class Pasajero implements Runnable {
             Thread.sleep(2000);//simulo tiempo dentro
             aerolinea.terminarCheckIn(id);//sale del puesto de atencion
             aeropuerto.subirAlTren(id);
-            bajarDelTren();
+            Terminal terminal=bajarDelTren();
+            if(reloj.getHora()-vuelo.getHorario()>=100){//si el pasajero tiene una hora o mas antes del embarque
+                terminal.entrarFreeShop(id);
+            }else{
+                //esperar embarque
+            }
+
        }catch(Exception e){
             e.getStackTrace();
 

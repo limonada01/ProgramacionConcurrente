@@ -32,7 +32,8 @@ public class Tren implements Runnable {
     public void run() {
         try {
             while(true){
-                aeropuerto.comenzarRecorridoTren();//comienza el recorrido del tren
+                aeropuerto.trenListoParaQueSuban();//avisa que no está viajando y está listo para que los pasajero suban
+                aeropuerto.transporteATerminal();//comienza el recorrido del tren
                 irTerminalC();
                 if(aeropuerto.getBajanEnC()>0){
                     aeropuerto.esperarQueBajenDelTren();
