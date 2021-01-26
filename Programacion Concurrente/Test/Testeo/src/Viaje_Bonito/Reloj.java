@@ -2,24 +2,30 @@ package Viaje_Bonito;
 
 public class Reloj implements Runnable {
     int hora;
+    int min;
     Aeropuerto aeropuerto;
 
     public Reloj(/*Aeropuerto aeropuerto*/) {
-        this.hora = 0000;
+        this.hora = 5;
+        this.min=0;
         //this.aeropuerto = aeropuerto;
     }
 
-    public void hacerFuncionar() {
+    public void on() {
         while (true) {
-            hora = (hora + 10) % 2400;// avanza de a 1 minuto
-            if (hora == 600) {
+            min=min+10;
+            if(min==60){
+                min=0;
+                hora=(hora+1)%24;
+            }
+            if (hora == 6 && min==0) {
                 aeropuerto.abrirAeropuerto();
             }
-            if (hora == 2200) {
+            if (hora == 22 && min ==0 ) {
                 aeropuerto.cerrarAeropuerto();
             }
             try {
-                Thread.sleep(500);// medio segundo por minuto
+                Thread.sleep(250);// un cuarto de segundo real por 10 minutos en la simulacion
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -29,7 +35,7 @@ public class Reloj implements Runnable {
 
     @Override
     public void run() {
-        hacerFuncionar();
+        on();
 
     }
     
@@ -37,6 +43,9 @@ public class Reloj implements Runnable {
         return hora;
     }
 
+    public int getMinutos(){
+        return min;
+    }    
 
     public void setAeropuerto(Aeropuerto aeropuerto) {
         this.aeropuerto = aeropuerto;

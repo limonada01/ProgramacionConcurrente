@@ -27,34 +27,31 @@ public class Aerolinea {
         ordenDeLlegada.poner(id);
         while(cantidadActual>= max ){
             System.out.println("*** El puesto de atencion de la aerolinea "+numeroAerolinea+" está lleno, el pasajero "+id+" debe esperar para ser atendido...");
-            while(cantidadActual>=max || (int)ordenDeLlegada.obtenerFrente()==id){
+            while(cantidadActual>=max || (int)ordenDeLlegada.obtenerFrente()!=id){//si aun esta lleno o no es su turno, espera
                 this.wait();
-                this.notify();//en cadena
             }
         }
         ordenDeLlegada.sacar();//quito de la cola de orden de llegada al que logró ingresar
         cantidadActual++;
-        System.out.println("*** El pasajero "+id+ " ingresó a el puesto de atencion de la aerolinea "+numeroAerolinea+" para realizar el check IN");
+        System.out.println(ConsoleColors.PURPLE_BOLD+"*** El pasajero "+id+ " ingresó a el puesto de atencion de la aerolinea "+numeroAerolinea+" para realizar el check IN"+ConsoleColors.RESET);
         retorno=asignarVuelo();//asigno vuelo al pasajero
         return retorno;
     }
 
     public synchronized void terminarCheckIn(int id){
-        
         cantidadActual--;
-        System.out.println("*** El pasajero "+id+ " salió del puesto de atencion de la aerolinea "+numeroAerolinea+" y deja un lugar." );
-        this.notify();
-        
+        System.out.println(ConsoleColors.PURPLE_BOLD+"*** El pasajero "+id+ " salió del puesto de atencion de la aerolinea "+numeroAerolinea+" y deja un lugar."+ConsoleColors.RESET );
+        this.notifyAll();
     }
 
     public Vuelo asignarVuelo(){//el vuelo debe estar sujeto a la hora actual y horario de salida del vuelo
         
         Vuelo vuelo=null;
-        int cantVuelos=vuelos.length;
+        int cantVuelos=vuelos.length-1;
         boolean buscando=true;
         int i=0;
-        while(buscando || cantVuelos!=i){
-            if(vuelos[i].getHorario()>= reloj.getHora()+200){
+        while(buscando && cantVuelos!=i){
+            if(vuelos[i].getHorario()>= reloj.getHora()+2){
                 //si el horario del vuelo es en 2 horas o mas, se lo asigno al pasajero, siempre debe haber un VUELO sino el programa se ROMPERA!
                 vuelo=vuelos[i];
                 buscando=false;

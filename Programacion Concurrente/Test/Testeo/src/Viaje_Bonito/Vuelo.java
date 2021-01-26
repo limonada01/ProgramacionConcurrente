@@ -19,7 +19,7 @@ public class Vuelo {
         return horario;
     }
 
-    public int getTerminal() {
+    public char getTerminal() {
         return terminal;
     }
 

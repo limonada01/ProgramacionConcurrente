@@ -28,24 +28,28 @@ public class Terminal {
     public void entrarFreeShop(int id) throws InterruptedException {
         lockFreeShop.lock();
         while(cantPersonasActual>=maxPersonas){
-            System.out.println("Pasajero "+id+" aun no puede ingresar a la freeshop de la terminal "+this.id);
+            System.out.println(ConsoleColors.YELLOW_BOLD+"Pasajero "+id+" aun no puede ingresar a la freeshop de la terminal "+this.id+ConsoleColors.RESET);
             lleno.await();
         }
         cantPersonasActual++;
-        System.out.println("Pasajero "+id+" entró a la Freeshop de la Terminal "+this.id);
+        System.out.println(ConsoleColors.YELLOW_BOLD+"Pasajero "+id+" entró a la Freeshop de la Terminal "+this.id+ConsoleColors.RESET);
         lockFreeShop.unlock();
     }
 
     public  void salirFreeShop(int id) throws InterruptedException {
         cajas.acquire();
         lockFreeShop.lock();
-        System.out.println("Pasajero "+id+" pasó por caja y salió de la Freeshop de la Terminal "+this.id);
+        System.out.println(ConsoleColors.YELLOW_BOLD+"Pasajero "+id+" pasó por caja y salió de la Freeshop de la Terminal "+this.id+ConsoleColors.RESET);
         cantPersonasActual--;
         lockFreeShop.unlock();
         cajas.release();
         
     }
     public void esperarEmbarque(int id){
-        System.out.println("Pasajero "+id+" espera en la sala de embaque de la terminal "+this.id);
+        System.out.println(ConsoleColors.YELLOW_BOLD+"Pasajero "+id+" espera en la sala de embaque de la terminal "+this.id+ConsoleColors.RESET);
+    }
+    
+    public void listoParaEmbarcar(int id,int puestoEmbarque){
+        System.out.println(ConsoleColors.YELLOW_BOLD+"Pasajero: "+id+" se encuentra listo para embarcar en la Terminal: "+this.id+ " puesto de embarque: "+puestoEmbarque+ConsoleColors.RESET);
     }
 }

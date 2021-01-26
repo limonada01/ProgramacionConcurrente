@@ -1,6 +1,6 @@
 
 
-package TP6.CentroHemoterapia3;
+package Viaje_Bonito;
 
 
 /**
