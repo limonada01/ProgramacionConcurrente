@@ -24,6 +24,7 @@ public class Reloj implements Runnable {
             if (hora == 22 && min ==0 ) {
                 aeropuerto.cerrarAeropuerto();
             }
+            
             try {
                 Thread.sleep(250);// un cuarto de segundo real por 10 minutos en la simulacion
             } catch (InterruptedException e) {

@@ -9,7 +9,7 @@ public class Main {
         
         //vuelos
     
-        int cantVuelos=9;
+        int cantVuelos=7;//cant vuelos por aerolinea
         Vuelo[] vuelosA=new Vuelo[cantVuelos];
         Vuelo[] vuelosB=new Vuelo[cantVuelos];
         Vuelo[] vuelosC=new Vuelo[cantVuelos];
@@ -19,10 +19,10 @@ public class Main {
         int puertaEmbarqueC=7;   
 
         for(int i=0;i< cantVuelos;i++){
-            vuelosA[i]=new Vuelo(hora+2,'a',puertaEmbarqueA);
+            vuelosA[i]=new Vuelo(hora+1,'a',puertaEmbarqueA);
             vuelosB[i]=new Vuelo(hora+2,'b',puertaEmbarqueB);
-            vuelosC[i]=new Vuelo(hora+2,'c',puertaEmbarqueC);
-            hora+=2;
+            vuelosC[i]=new Vuelo(hora+3,'c',puertaEmbarqueC);
+            hora=(hora+3)%24;
             puertaEmbarqueA++;
             puertaEmbarqueB++;
             puertaEmbarqueC++;
