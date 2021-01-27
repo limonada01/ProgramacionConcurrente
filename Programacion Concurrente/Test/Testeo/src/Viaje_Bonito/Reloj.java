@@ -50,4 +50,20 @@ public class Reloj implements Runnable {
     public void setAeropuerto(Aeropuerto aeropuerto) {
         this.aeropuerto = aeropuerto;
     }
+
+    public boolean calculoTiempo(int hor){
+        boolean retorno=false;
+        int aux=hor-this.hora;
+        if(aux==1){
+            if(this.min ==0 ){//si tiene 55 o mas minutos de diferencia 
+                retorno=true;
+            }
+        }else{
+            //si es mayor a 1 hora de diferencia
+            retorno=true;
+        }
+
+        return retorno;
+    }
+
 }

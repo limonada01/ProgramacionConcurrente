@@ -31,23 +31,23 @@ public class Pasajero implements Runnable {
     @Override
     public void run() {
         try{
-            int segSim=random.nextInt(15);
+            int segSim=random.nextInt(4);
             Thread.sleep(1000*segSim);
             //System.out.println("****** numero aerlineas: "+aeropuerto.getNumeroAerolineas());
             int nroAerolinea=random.nextInt(aeropuerto.getNumeroAerolineas()); 
             this.aerolinea=aeropuerto.ingresarPuestoDeInforme(id,nroAerolinea);//entrar al puesto informe
-            Thread.sleep(2000);//simulo tiempo dentro
+            Thread.sleep(500);//simulo tiempo dentro -20 mins
             aeropuerto.salirPuestoDeInforme(id);//salir del puesto informe
             vuelo=aerolinea.realizarCheckIn(id);//entra a puesto de atencion de la aerolinea
-            Thread.sleep(2000);//simulo tiempo dentro
+            Thread.sleep(500);//simulo tiempo dentro -20 mins
             aerolinea.terminarCheckIn(id);//sale del puesto de atencion
             //System.out.println("******************************************************** "+id +" HORA: "+reloj.getHora());
             //System.out.println("TEST::::::::::::::::::::::: ID: "+id+" terminal: "+vuelo.getTerminal());
             aeropuerto.subirAlTren(id,vuelo.getTerminal());
             Terminal terminal=bajarDelTren();
-            if(reloj.getHora()-vuelo.getHorario()>=1){//si el pasajero tiene una hora o mas antes del embarque
+            if(reloj.calculoTiempo(vuelo.getHorario()) && aeropuerto.getAbierto()){//si el pasajero tiene una hora o mas antes del embarque y el aeropuerto está abierto
                 terminal.entrarFreeShop(id);
-                Thread.sleep(4000);
+                Thread.sleep(1000);//40 mins simulados
                 terminal.salirFreeShop(id);
             }else{
                 //esperar embarque

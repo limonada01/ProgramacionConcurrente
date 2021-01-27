@@ -1,12 +1,12 @@
 package Viaje_Bonito;
 
 import java.util.Random;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+
 
 public class Aeropuerto {
     private boolean abierto = false;
@@ -29,6 +29,7 @@ public class Aeropuerto {
     private Semaphore bajarB;
     private Semaphore bajarC;
     private Semaphore esperarBajenTren;//esperar que los pasajeros bajen del tren en una terminal 
+    private Semaphore semTemporizadorTren;
     //private Semaphore semTren;
     // private Semaphore semPuestoInforme=new Semaphore(1);
     private Aerolinea[] aerolineas;
@@ -51,13 +52,14 @@ public class Aeropuerto {
         this.bajarB=new Semaphore(0);
         this.bajarC=new Semaphore(0);
         this.esperarBajenTren=new Semaphore(0);
-        //this.semTren = new Semaphore(1);
+        this.semTemporizadorTren=new Semaphore(0);
+        
     }
 
     public Aerolinea ingresarPuestoDeInforme(int id, int nroAerolinea) throws InterruptedException {
         lock.lock();
         Aerolinea retorno;
-        // semPuestoInforme.acquire();
+        
         while (!abierto) {// cuando el aeropierto esté cerrado
             System.out.println("** Pasajero " + id
                     + " el Aeropuerto se encuentra cerrado en este momento, abre a las 6:00 AM !** ");
@@ -71,7 +73,6 @@ public class Aeropuerto {
 
     public void salirPuestoDeInforme(int id) throws InterruptedException {
         System.out.println(ConsoleColors.GREEN_BOLD+"El pasajero número " + id + " ha salido del puesto de informe ***"+ConsoleColors.RESET);
-        // semPuestoInforme.release();
         lock.unlock();
     }
 
@@ -88,7 +89,7 @@ public class Aeropuerto {
         System.out.println("** Aeropuerto CERRADO hasta las 6:00 AM ! **");
     }
 
-    public void subirAlTren(int id,char terminalBajada) throws InterruptedException, BrokenBarrierException {
+    public void subirAlTren(int id,char terminalBajada) throws InterruptedException {
         lockTren.lock();
  
         while(trenViajando || cantActualEnTren >= capacidadMaxTren){//si el tren está viajando o ya está lleno deberá esperar
@@ -97,6 +98,9 @@ public class Aeropuerto {
             
         }
         cantActualEnTren++;
+        if(cantActualEnTren==1){
+            semTemporizadorTren.release();//activo el temporizador del tren
+        }
         anotarBajada(terminalBajada);
         System.out.println("El pasajero "+id+" consigue subir al tren y espera a que parta");
         if(cantActualEnTren == capacidadMaxTren){// falta hacer que arranque desp de determinado tiempo si aun no se llena!!
@@ -104,6 +108,8 @@ public class Aeropuerto {
         }
         lockTren.unlock();
     }
+
+
 
     public void anotarBajada(char terminalBajada){
         switch(terminalBajada){
@@ -120,7 +126,18 @@ public class Aeropuerto {
         
     }
 
+    public void temporizadorON() throws InterruptedException {
+        semTemporizadorTren.acquire();
+    }
 
+    public void temporizadorShot(){
+        lockTren.lock();
+        if(!trenViajando){// si el tren aun no ha salido
+            System.out.println(ConsoleColors.RED_BRIGHT+" * Tren debe partir por tiempo de espera... * "+ConsoleColors.RESET);
+            trenListoParaSalir.release();
+        }
+        lockTren.unlock();
+    }
     
     public void trenListoParaQueSuban(){
         this.trenViajando=false;
@@ -207,6 +224,9 @@ public class Aeropuerto {
         return bajanEnC;
     }
 
+    public boolean getAbierto(){
+        return abierto;
+    }
     
     
 }

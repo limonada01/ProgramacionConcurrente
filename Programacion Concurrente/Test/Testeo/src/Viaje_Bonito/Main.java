@@ -38,18 +38,7 @@ public class Main {
                 puertaEmbarqueA=7;
             }
         }
-        /*
-        for(int i=0;i< vuelosB.length;i++){
-            vuelosB[i]=new Vuelo(hora+2,'b',puertaEmbarque);
-            hora+=2;
-            puertaEmbarque++;
-        }
-        for(int i=0;i< vuelosC.length;i++){
-            vuelosC[i]=new Vuelo(hora+2,'c',puertaEmbarque);
-            hora+=2;
-            puertaEmbarque++;
-        }*/
-        // terminales
+        
         int maxFreeShopA=3;
         int maxFreeShopB=3;
         int maxFreeShopC=3;
@@ -68,6 +57,10 @@ public class Main {
         
         int capacidadMaxTren=3;
         Aeropuerto aeropuerto=new Aeropuerto(aerolineas, terminales, capacidadMaxTren);
+
+        //temporizador
+        Thread temporizador=new Thread(new Temporizador(aeropuerto));
+        temporizador.start();
 
         //seteo el aeropuerto al reloj
         reloj.setAeropuerto(aeropuerto);
