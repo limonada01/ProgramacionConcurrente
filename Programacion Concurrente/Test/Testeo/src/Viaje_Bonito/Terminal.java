@@ -46,10 +46,10 @@ public class Terminal {
         
     }
     public void esperarEmbarque(int id){
-        System.out.println(ConsoleColors.YELLOW_BOLD+"Pasajero "+id+" espera en la sala de embaque de la terminal "+this.id+ConsoleColors.RESET);
+        System.out.println(ConsoleColors.CYAN_BOLD+"Pasajero "+id+" espera en la sala de embaque de la terminal "+this.id+ConsoleColors.RESET);
     }
     
-    public void listoParaEmbarcar(int id,int puestoEmbarque){
-        System.out.println(ConsoleColors.YELLOW_BOLD+"Pasajero: "+id+" se encuentra listo para embarcar en la Terminal: "+this.id+ " puesto de embarque: "+puestoEmbarque+ConsoleColors.RESET);
+    public void listoParaEmbarcar(int id,int puestoEmbarque,int horario){
+        System.out.println(ConsoleColors.YELLOW_BOLD+"Pasajero: "+id+" se encuentra listo para embarcar en la Terminal: "+this.id+ " puesto de embarque: "+puestoEmbarque+" HORA DE VUELO: "+horario+ConsoleColors.RESET);
     }
 }

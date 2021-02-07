@@ -78,7 +78,7 @@ public class Aeropuerto {
 
     public void abrirAeropuerto() {
         abierto = true;
-        System.out.println("** Aeropuerto ABIERTO hasta las 22:00 AM ! **");
+        System.out.println(ConsoleColors.BLUE_BOLD+"** Aeropuerto ABIERTO hasta las 22:00 AM ! **"+ConsoleColors.RESET);
         lock.lock();
         aeropuertoCerrado.signalAll();// despierto a todos los pasajeros que estan esperando a que abra el aeropuerto
         lock.unlock();
@@ -86,7 +86,7 @@ public class Aeropuerto {
 
     public void cerrarAeropuerto() {
         abierto = false;
-        System.out.println("** Aeropuerto CERRADO hasta las 6:00 AM ! **");
+        System.out.println(ConsoleColors.BLUE_BOLD+"** Aeropuerto CERRADO hasta las 6:00 AM ! **"+ConsoleColors.RESET);
     }
 
     public void subirAlTren(int id,char terminalBajada) throws InterruptedException {
@@ -99,11 +99,12 @@ public class Aeropuerto {
         }
         cantActualEnTren++;
         if(cantActualEnTren==1){
+            
             semTemporizadorTren.release();//activo el temporizador del tren
         }
         anotarBajada(terminalBajada);
         System.out.println("El pasajero "+id+" consigue subir al tren y espera a que parta");
-        if(cantActualEnTren == capacidadMaxTren){// falta hacer que arranque desp de determinado tiempo si aun no se llena!!
+        if(cantActualEnTren == capacidadMaxTren){
             trenListoParaSalir.release();//habilito el metodo comenzarRecorridoTren que ejecuta el hilo Tren
         }
         lockTren.unlock();
@@ -132,7 +133,8 @@ public class Aeropuerto {
 
     public void temporizadorShot(){
         lockTren.lock();
-        if(!trenViajando){// si el tren aun no ha salido
+        if(trenViajando==false && cantActualEnTren!=0){// si el tren aun no ha salido
+            //System.out.println("+++++++++++++ CANT ACTUAL EN TREN: "+cantActualEnTren+"*++++++++++++++");
             System.out.println(ConsoleColors.RED_BRIGHT+" * Tren debe partir por tiempo de espera... * "+ConsoleColors.RESET);
             trenListoParaSalir.release();
         }
@@ -150,9 +152,11 @@ public class Aeropuerto {
     public Terminal bajarEnA(int id) throws InterruptedException {
         Terminal retorno=null;
         bajarA.acquire();
+        //lockTren.lock();
         System.out.println("** El pasajero "+id+" baja del tren en la Estacion A! **");
         cantActualEnTren--;
         bajanEnA--;
+        //lockTren.unlock();
         if(bajanEnA==0){
             esperarBajenTren.release();
         }else{
@@ -165,9 +169,11 @@ public class Aeropuerto {
     public Terminal bajarEnB(int id) throws InterruptedException {
         Terminal retorno=null;
         bajarB.acquire();
+        //lockTren.lock();
         System.out.println("** El pasajero "+id+" baja del tren en la Estacion B! **");
         cantActualEnTren--;
         bajanEnB--;
+        //lockTren.unlock();
         if(bajanEnB==0){
             esperarBajenTren.release();
         }else{
@@ -179,9 +185,11 @@ public class Aeropuerto {
     public Terminal bajarEnC(int id) throws InterruptedException {
         Terminal retorno=null;
         bajarC.acquire();
+        //lockTren.lock();
         System.out.println("** El pasajero "+id+" baja del tren en la Estacion C! **");
         cantActualEnTren--;
         bajanEnC--;
+        //lockTren.unlock();
         if(bajanEnC==0){
             esperarBajenTren.release();
         }else{

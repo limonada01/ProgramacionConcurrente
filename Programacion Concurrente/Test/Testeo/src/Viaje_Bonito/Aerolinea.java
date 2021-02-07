@@ -51,8 +51,8 @@ public class Aerolinea {
         boolean buscando=true;
         int i=0;
         while(buscando && cantVuelos!=i){
-            if(vuelos[i].getHorario()>= reloj.getHora()+2){
-                //si el horario del vuelo es en 2 horas o mas, se lo asigno al pasajero, siempre debe haber un VUELO sino el programa se ROMPERA!
+            if(reloj.calcularVuelo(vuelos[i].getHorario())){
+                //si el horario del vuelo es en 1 hora y 30 min o mas, se lo asigno al pasajero, siempre debe haber un VUELO sino el programa se ROMPERA!
                 vuelo=vuelos[i];
                 buscando=false;
             }

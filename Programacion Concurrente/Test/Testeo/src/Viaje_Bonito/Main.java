@@ -75,7 +75,7 @@ public class Main {
 
 
         //pasajeros
-        int cantPasajeros=10;
+        int cantPasajeros=70;
         Thread[] pasajeros=new Thread[cantPasajeros];
 
         for(int i=0;i<pasajeros.length;i++){

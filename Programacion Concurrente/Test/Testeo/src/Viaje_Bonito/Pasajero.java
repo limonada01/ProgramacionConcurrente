@@ -31,15 +31,15 @@ public class Pasajero implements Runnable {
     @Override
     public void run() {
         try{
-            int segSim=random.nextInt(4);
+            int segSim=random.nextInt(7)+3;//de 3 a 9 segundos reales
             Thread.sleep(1000*segSim);
             //System.out.println("****** numero aerlineas: "+aeropuerto.getNumeroAerolineas());
             int nroAerolinea=random.nextInt(aeropuerto.getNumeroAerolineas()); 
             this.aerolinea=aeropuerto.ingresarPuestoDeInforme(id,nroAerolinea);//entrar al puesto informe
-            Thread.sleep(500);//simulo tiempo dentro -20 mins
+            Thread.sleep(250);//simulo tiempo dentro -   10 mins
             aeropuerto.salirPuestoDeInforme(id);//salir del puesto informe
             vuelo=aerolinea.realizarCheckIn(id);//entra a puesto de atencion de la aerolinea
-            Thread.sleep(500);//simulo tiempo dentro -20 mins
+            Thread.sleep(250);//simulo tiempo dentro -   10 mins
             aerolinea.terminarCheckIn(id);//sale del puesto de atencion
             //System.out.println("******************************************************** "+id +" HORA: "+reloj.getHora());
             //System.out.println("TEST::::::::::::::::::::::: ID: "+id+" terminal: "+vuelo.getTerminal());
@@ -47,13 +47,13 @@ public class Pasajero implements Runnable {
             Terminal terminal=bajarDelTren();
             if(reloj.calculoTiempo(vuelo.getHorario()) && aeropuerto.getAbierto()){//si el pasajero tiene una hora o mas antes del embarque y el aeropuerto está abierto
                 terminal.entrarFreeShop(id);
-                Thread.sleep(1000);//40 mins simulados
+                Thread.sleep(250);//10 mins simulados
                 terminal.salirFreeShop(id);
             }else{
                 //esperar embarque
                 terminal.esperarEmbarque(id);
             }
-            terminal.listoParaEmbarcar(id, vuelo.getPuertoEmbarque());
+            terminal.listoParaEmbarcar(id, vuelo.getPuertoEmbarque(),vuelo.getHorario());
        }catch(Exception e){
             e.getStackTrace();
 

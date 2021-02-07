@@ -12,19 +12,19 @@ public class Tren implements Runnable {
     }
 
     public void irTerminalC() throws InterruptedException {
-        Thread.sleep(500);
+        Thread.sleep(50);//2 mins sim
         System.out.println(ConsoleColors.RED_BRIGHT+"*Tren en Terminal C*"+ConsoleColors.RESET);
         lugarActual='c';
     }
 
     public void irTerminalB() throws InterruptedException {
-        Thread.sleep(500);
+        Thread.sleep(50);
         System.out.println(ConsoleColors.RED_BRIGHT+"*Tren en Terminal B*"+ConsoleColors.RESET);
         lugarActual='b';
     }
 
     public void irTerminalA() throws InterruptedException {
-        Thread.sleep(500);
+        Thread.sleep(50);
         System.out.println(ConsoleColors.RED_BRIGHT+"*Tren en Terminal A*"+ConsoleColors.RESET);
         lugarActual='a';
     }
@@ -52,7 +52,7 @@ public class Tren implements Runnable {
                     aeropuerto.esperarQueBajenDelTren();
                 }
                 System.out.println(ConsoleColors.RED_BRIGHT+"*Tren de regreso a por nuevos pasajeros*"+ConsoleColors.RESET);
-                Thread.sleep(5000);//tiempo que tarda en regresar al aeropuerto
+                Thread.sleep(150);//tiempo que tarda en regresar al aeropuerto
             }
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block

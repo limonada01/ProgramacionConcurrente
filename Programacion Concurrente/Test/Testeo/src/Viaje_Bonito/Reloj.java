@@ -1,5 +1,7 @@
 package Viaje_Bonito;
 
+import java.io.Console;
+
 public class Reloj implements Runnable {
     int hora;
     int min;
@@ -17,6 +19,7 @@ public class Reloj implements Runnable {
             if(min==60){
                 min=0;
                 hora=(hora+1)%24;
+                System.out.println(ConsoleColors.WHITE_BOLD+"HORA ACTUAL:"+getHora()+ConsoleColors.RESET);
             }
             if (hora == 6 && min==0) {
                 aeropuerto.abrirAeropuerto();
@@ -56,7 +59,7 @@ public class Reloj implements Runnable {
         boolean retorno=false;
         int aux=hor-this.hora;
         if(aux==1){
-            if(this.min ==0 ){//si tiene 55 o mas minutos de diferencia 
+            if(this.min ==0 ){//si tiene 1 hora de diferencia 
                 retorno=true;
             }
         }else{
@@ -64,6 +67,20 @@ public class Reloj implements Runnable {
             retorno=true;
         }
 
+        return retorno;
+    }
+
+    public boolean calcularVuelo(int hor){
+        boolean retorno=false;
+        int aux=hor-this.hora;
+        if(aux<=2){
+            if(this.min <=30 && aux ==2){//si tiene 1 hora y 30 o mas de diferencia 
+                retorno=true;
+            }
+        }else{
+                //si es mayor a 2 hora de diferencia
+                retorno=true;
+        }
         return retorno;
     }
 
