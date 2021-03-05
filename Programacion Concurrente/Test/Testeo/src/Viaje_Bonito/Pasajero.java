@@ -49,11 +49,10 @@ public class Pasajero implements Runnable {
                 terminal.entrarFreeShop(id);
                 Thread.sleep(250);//10 mins simulados
                 terminal.salirFreeShop(id);
-            }else{
-                //esperar embarque
-                terminal.esperarEmbarque(id);
+                
             }
             terminal.listoParaEmbarcar(id, vuelo.getPuertoEmbarque(),vuelo.getHorario());
+            
        }catch(Exception e){
             e.getStackTrace();
 

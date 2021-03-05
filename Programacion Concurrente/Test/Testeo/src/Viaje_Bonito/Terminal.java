@@ -41,6 +41,7 @@ public class Terminal {
         lockFreeShop.lock();
         System.out.println(ConsoleColors.YELLOW_BOLD+"Pasajero "+id+" pasó por caja y salió de la Freeshop de la Terminal "+this.id+ConsoleColors.RESET);
         cantPersonasActual--;
+        lleno.signal();
         lockFreeShop.unlock();
         cajas.release();
         

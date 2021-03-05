@@ -43,7 +43,7 @@ public class Aerolinea {
         System.out.println(ConsoleColors.PURPLE_BOLD+"*** El pasajero "+id+ " salió del puesto de atencion de la aerolinea "+numeroAerolinea+" y deja un lugar."+ConsoleColors.RESET );
         this.notifyAll();
     }
-
+//vuelo: asignar en puesto de informe
     public Vuelo asignarVuelo(){//el vuelo debe estar sujeto a la hora actual y horario de salida del vuelo
         
         Vuelo vuelo=null;

@@ -12,12 +12,12 @@ public class Aeropuerto {
     private boolean abierto = false;
     private Lock lock;
     private Lock lockTren;
-    private Lock bajadaTren;
+    //private Lock bajadaTren;
     private Condition aeropuertoCerrado;
     private Condition trenEspera;
-    private Condition terminalA;
-    private Condition terminalB;
-    private Condition terminalC;
+    //private Condition terminalA;
+    //private Condition terminalB;
+    //private Condition terminalC;
     private int capacidadMaxTren;
     private int cantActualEnTren=0;
     private int bajanEnA=0;
@@ -39,13 +39,13 @@ public class Aeropuerto {
         this.aerolineas = aerolineas;
         this.terminales=terminales;
         this.lock = new ReentrantLock();
-        this.lockTren=new ReentrantLock();
-        this.bajadaTren=new ReentrantLock();
+        this.lockTren=new ReentrantLock();//para subir al tren
+        //this.bajadaTren=new ReentrantLock();
         this.aeropuertoCerrado = lock.newCondition();
         this.trenEspera=lockTren.newCondition();
-        this.terminalA=bajadaTren.newCondition();
-        this.terminalB=bajadaTren.newCondition();
-        this.terminalC=bajadaTren.newCondition();
+       // this.terminalA=bajadaTren.newCondition();
+       // this.terminalB=bajadaTren.newCondition();
+       // this.terminalC=bajadaTren.newCondition();
         this.capacidadMaxTren=capacidadMaxTren;
         this.trenListoParaSalir=new Semaphore(0);
         this.bajarA=new Semaphore(0);
