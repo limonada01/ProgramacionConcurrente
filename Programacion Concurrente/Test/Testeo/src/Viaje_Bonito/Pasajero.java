@@ -36,10 +36,11 @@ public class Pasajero implements Runnable {
             //System.out.println("****** numero aerlineas: "+aeropuerto.getNumeroAerolineas());
             int nroAerolinea=random.nextInt(aeropuerto.getNumeroAerolineas()); 
             this.aerolinea=aeropuerto.ingresarPuestoDeInforme(id,nroAerolinea);//entrar al puesto informe
+            vuelo=aeropuerto.elegirVuelo(id, aerolinea);//elige el vuelo
             Thread.sleep(250);//simulo tiempo dentro -   10 mins
             aeropuerto.salirPuestoDeInforme(id);//salir del puesto informe
-            vuelo=aerolinea.realizarCheckIn(id);//entra a puesto de atencion de la aerolinea
-            Thread.sleep(250);//simulo tiempo dentro -   10 mins
+            aerolinea.realizarCheckIn(id);//entra a puesto de atencion de la aerolinea
+            Thread.sleep(500);//simulo tiempo dentro -   20 mins
             aerolinea.terminarCheckIn(id);//sale del puesto de atencion
             //System.out.println("******************************************************** "+id +" HORA: "+reloj.getHora());
             //System.out.println("TEST::::::::::::::::::::::: ID: "+id+" terminal: "+vuelo.getTerminal());

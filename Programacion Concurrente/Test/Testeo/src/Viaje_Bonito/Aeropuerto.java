@@ -23,6 +23,7 @@ public class Aeropuerto {
     private int bajanEnA=0;
     private int bajanEnB=0;
     private int bajanEnC=0;
+    private int[] bajadas;
     private boolean trenViajando=false;
     private Semaphore trenListoParaSalir;
     private Semaphore bajarA;
@@ -53,6 +54,7 @@ public class Aeropuerto {
         this.bajarC=new Semaphore(0);
         this.esperarBajenTren=new Semaphore(0);
         this.semTemporizadorTren=new Semaphore(0);
+        this.bajadas=new int[terminales.length];
         
     }
 
@@ -67,13 +69,21 @@ public class Aeropuerto {
         }
         System.out.println(ConsoleColors.GREEN_BOLD+"*** El pasajero número " + id
                 + " ha ingresado al puesto de informe y se le informó sobre su puesto de atención"+ConsoleColors.RESET);
-        retorno = aerolineas[nroAerolinea];// retorna Vuelo
+        retorno = aerolineas[nroAerolinea];// retorna Aerolinea
         return retorno;
     }
-
+    public Vuelo elegirVuelo(int id,Aerolinea aerolinea){
+        System.out.println("** El pasajero número "+id+" elige un vuelo **");
+        Vuelo vuelo=aerolinea.asignarVuelo();
+        return vuelo;
+    }
     public void salirPuestoDeInforme(int id) throws InterruptedException {
         System.out.println(ConsoleColors.GREEN_BOLD+"El pasajero número " + id + " ha salido del puesto de informe ***"+ConsoleColors.RESET);
         lock.unlock();
+    }
+
+    public void hallCentral(){
+        
     }
 
     public void abrirAeropuerto() {
@@ -147,6 +157,12 @@ public class Aeropuerto {
         lockTren.lock();
         trenEspera.signalAll();//despierto a los pasajeros que esperan para subir al tren
         lockTren.unlock();
+    }
+
+    public Terminal bajarDelTren(int id, int nroTerminal){
+        Terminal retorno=null;
+
+        return retorno;
     }
 
     public Terminal bajarEnA(int id) throws InterruptedException {

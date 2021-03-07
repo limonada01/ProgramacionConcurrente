@@ -7,9 +7,13 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Aerolinea {
     private int numeroAerolinea;
+    private boolean atendiendo=false;//bandera para saber si se está atendiendo a un pasajero en el puesto de atencion
     private Vuelo[] vuelos;
     private int max;// cantidad maxima de personas dentro del puesto de atencion
     private int cantidadActual=0;
+    private Lock lockPuestoAtencion;
+    private Condition esperaHall;
+    private Condition esperaSerAtendido;
     private Cola ordenDeLlegada;
     private static Reloj reloj;
 
@@ -20,30 +24,46 @@ public class Aerolinea {
         this.max=max;
         this.ordenDeLlegada=new Cola();
         this.reloj=reloj;
+        this.lockPuestoAtencion= new ReentrantLock();
+        this.esperaSerAtendido= lockPuestoAtencion.newCondition();
+        this.esperaHall= lockPuestoAtencion.newCondition();
     }
 
-    public synchronized Vuelo realizarCheckIn(int id) throws InterruptedException {
-        Vuelo retorno;
-        ordenDeLlegada.poner(id);
-        while(cantidadActual>= max ){
-            System.out.println("*** El puesto de atencion de la aerolinea "+numeroAerolinea+" está lleno, el pasajero "+id+" debe esperar para ser atendido...");
-            while(cantidadActual>=max || (int)ordenDeLlegada.obtenerFrente()!=id){//si aun esta lleno o no es su turno, espera
-                this.wait();
-            }
+    public void realizarCheckIn(int id) throws InterruptedException {
+        lockPuestoAtencion.lock();
+        hallCentral(id);//verifica si tiene q esperar en el hall central
+        ordenDeLlegada.poner(id);//se pone en la cola de llegada cuando entra al PUESTO DE ATENCION, NO EN EL HALL!
+        cantidadActual++;//sumo 1 a la cantidad de personas actualmente dentro del puesto de atencion
+        while(atendiendo || (int)ordenDeLlegada.obtenerFrente()!=id){//si se está atendiendo a una persona o no es su turno segun el orden de llegada , deberá esperar dentro del puesto de atencion hasta ser atendido 
+            System.out.println(ConsoleColors.PURPLE_BOLD+" ** Pasajero: "+id+": Hay un pasajero siendo atendido en este momento en el puesto de atencion de la aerolinea "+numeroAerolinea+"... debe esperar en el PUESTO DE ATENCION "+ConsoleColors.RESET);
+            esperaSerAtendido.await();
         }
-        ordenDeLlegada.sacar();//quito de la cola de orden de llegada al que logró ingresar
-        cantidadActual++;
-        System.out.println(ConsoleColors.PURPLE_BOLD+"*** El pasajero "+id+ " ingresó a el puesto de atencion de la aerolinea "+numeroAerolinea+" para realizar el check IN"+ConsoleColors.RESET);
-        retorno=asignarVuelo();//asigno vuelo al pasajero
-        return retorno;
+        ordenDeLlegada.sacar();//quito de la cola de orden de llegada al que acaban de atender
+        atendiendo=true;//ahora toca que lo atiendan al pasajero que acaba de salir del while en caso de que le haya tocado esperar
+        System.out.println(ConsoleColors.PURPLE_BOLD+"*** El pasajero "+id+ " del puesto de atencion de la aerolinea "+numeroAerolinea+" consigue realizar el check IN"+ConsoleColors.RESET);
+        lockPuestoAtencion.unlock();
     }
 
-    public synchronized void terminarCheckIn(int id){
-        cantidadActual--;
-        System.out.println(ConsoleColors.PURPLE_BOLD+"*** El pasajero "+id+ " salió del puesto de atencion de la aerolinea "+numeroAerolinea+" y deja un lugar."+ConsoleColors.RESET );
-        this.notifyAll();
+    public void hallCentral(int id) throws InterruptedException {
+        
+        while(cantidadActual>=max){
+            System.out.println(ConsoleColors.PURPLE_BOLD+"*** Puesto de atencion de la aerolinea "+numeroAerolinea+" ESTA LLENO, el pasajero "+id+" debe esperar en el HALL CENTRAL..."+ConsoleColors.RESET );
+            esperaHall.await();
+            System.out.println(ConsoleColors.PURPLE_BOLD+"Se liberó un lugar en el puesto de atencion y guardia permite entrada al pasajero "+id+ConsoleColors.RESET);
+        }
+        
+        
     }
-//vuelo: asignar en puesto de informe
+    public void terminarCheckIn(int id){
+        lockPuestoAtencion.lock();
+        System.out.println(ConsoleColors.PURPLE_BOLD+"*** El pasajero "+id+ " salió del puesto de atencion de la aerolinea "+numeroAerolinea+" y deja un lugar."+ConsoleColors.RESET );
+        cantidadActual--;
+        atendiendo=false;//se puede atender al siguiente en la cola
+        esperaSerAtendido.signalAll();// notifico a los que esperan a ser atendidos
+        esperaHall.signal();//notifico al hall central que hay un lugar disponible dentro del puesto de atencion
+        lockPuestoAtencion.unlock();
+    }
+
     public Vuelo asignarVuelo(){//el vuelo debe estar sujeto a la hora actual y horario de salida del vuelo
         
         Vuelo vuelo=null;
