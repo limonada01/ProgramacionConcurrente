@@ -1,6 +1,7 @@
 package Viaje_Bonito;
 
 import java.util.Random;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -9,6 +10,7 @@ public class Aerolinea {
     private int numeroAerolinea;
     private boolean atendiendo=false;//bandera para saber si se está atendiendo a un pasajero en el puesto de atencion
     private Vuelo[] vuelos;
+    //private Semaphore[] semEmbarqueVuelo;//guarda los semaforos para que los pasajeros embarquen
     private int max;// cantidad maxima de personas dentro del puesto de atencion
     private int cantidadActual=0;
     private Lock lockPuestoAtencion;
@@ -27,6 +29,7 @@ public class Aerolinea {
         this.lockPuestoAtencion= new ReentrantLock();
         this.esperaSerAtendido= lockPuestoAtencion.newCondition();
         this.esperaHall= lockPuestoAtencion.newCondition();
+        //this.semEmbarqueVuelo=new Semaphore[vuelos.length];
     }
 
     public void realizarCheckIn(int id) throws InterruptedException {
@@ -82,4 +85,13 @@ public class Aerolinea {
 
     }
 
+    public Vuelo[] getVuelos(){
+        return this.vuelos;
+    }
+
+/*
+    public void pasajeroEmbarcar(int nroVuelo) throws InterruptedException{//el pasajero se dentendrá aca hasta q falte 1 hora para que salga el avion
+        semEmbarqueVuelo[nroVuelo].acquire();
+    }
+    */
 }

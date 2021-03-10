@@ -8,14 +8,14 @@ import java.util.concurrent.locks.ReentrantLock;
 import TP6.Trafico.A.Semaforo;
 
 public class Terminal {
-    private char id;
+    private int id;
     
     private int cantPersonasActual=0;
     private int maxPersonas;
     private Semaphore cajas;
     private Lock lockFreeShop;
     private Condition lleno;
-    public Terminal(char id, int maxPersonasFreeShop){
+    public Terminal(int id, int maxPersonasFreeShop){
         this.id=id;
         this.maxPersonas=maxPersonasFreeShop;
         this.cajas=new Semaphore(2);

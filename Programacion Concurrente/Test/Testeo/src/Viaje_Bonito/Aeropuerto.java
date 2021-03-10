@@ -11,28 +11,17 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Aeropuerto {
     private boolean abierto = false;
     private Lock lock;
-    private Lock lockTren;
-    //private Lock bajadaTren;
+    private Lock lockTren; 
     private Condition aeropuertoCerrado;
     private Condition trenEspera;
-    //private Condition terminalA;
-    //private Condition terminalB;
-    //private Condition terminalC;
     private int capacidadMaxTren;
     private int cantActualEnTren=0;
-    private int bajanEnA=0;
-    private int bajanEnB=0;
-    private int bajanEnC=0;
-    private int[] bajadas;
+    private int[] cantPersonasBajanEn;
+    private Semaphore[] bajadasSem;// semaforo bajarA, bajarB, BajarC, etc
     private boolean trenViajando=false;
     private Semaphore trenListoParaSalir;
-    private Semaphore bajarA;
-    private Semaphore bajarB;
-    private Semaphore bajarC;
     private Semaphore esperarBajenTren;//esperar que los pasajeros bajen del tren en una terminal 
     private Semaphore semTemporizadorTren;
-    //private Semaphore semTren;
-    // private Semaphore semPuestoInforme=new Semaphore(1);
     private Aerolinea[] aerolineas;
     private Terminal[] terminales;
 
@@ -41,20 +30,21 @@ public class Aeropuerto {
         this.terminales=terminales;
         this.lock = new ReentrantLock();
         this.lockTren=new ReentrantLock();//para subir al tren
-        //this.bajadaTren=new ReentrantLock();
         this.aeropuertoCerrado = lock.newCondition();
         this.trenEspera=lockTren.newCondition();
-       // this.terminalA=bajadaTren.newCondition();
-       // this.terminalB=bajadaTren.newCondition();
-       // this.terminalC=bajadaTren.newCondition();
         this.capacidadMaxTren=capacidadMaxTren;
         this.trenListoParaSalir=new Semaphore(0);
-        this.bajarA=new Semaphore(0);
-        this.bajarB=new Semaphore(0);
-        this.bajarC=new Semaphore(0);
         this.esperarBajenTren=new Semaphore(0);
         this.semTemporizadorTren=new Semaphore(0);
-        this.bajadas=new int[terminales.length];
+        this.cantPersonasBajanEn=new int[terminales.length];
+        this.bajadasSem=new Semaphore[terminales.length];
+        for(int i=0;i<terminales.length;i++){//creo los semaforos para controlar la bajada en cada terminal (a,b,c,etc)
+            bajadasSem[i]=new Semaphore(0);
+        }
+        for(int i=0;i<terminales.length;i++){//inicio todos los valores en 0
+            cantPersonasBajanEn[i]=0;
+        }
+
         
     }
 
@@ -82,9 +72,7 @@ public class Aeropuerto {
         lock.unlock();
     }
 
-    public void hallCentral(){
-        
-    }
+    
 
     public void abrirAeropuerto() {
         abierto = true;
@@ -99,7 +87,7 @@ public class Aeropuerto {
         System.out.println(ConsoleColors.BLUE_BOLD+"** Aeropuerto CERRADO hasta las 6:00 AM ! **"+ConsoleColors.RESET);
     }
 
-    public void subirAlTren(int id,char terminalBajada) throws InterruptedException {
+    public void subirAlTren(int id,int terminalBajada) throws InterruptedException {
         lockTren.lock();
  
         while(trenViajando || cantActualEnTren >= capacidadMaxTren){//si el tren está viajando o ya está lleno deberá esperar
@@ -122,12 +110,8 @@ public class Aeropuerto {
 
 
 
-    public void anotarBajada(char terminalBajada){
-        switch(terminalBajada){
-            case 'a': bajanEnA++;break;
-            case 'b': bajanEnB++;break;
-            case 'c': bajanEnC++;break;
-        }
+    public void anotarBajada(int terminalBajada){
+        cantPersonasBajanEn[terminalBajada]++;
     }
 
     public void transporteATerminal() throws InterruptedException {
@@ -159,98 +143,44 @@ public class Aeropuerto {
         lockTren.unlock();
     }
 
-    public Terminal bajarDelTren(int id, int nroTerminal){
+    public Terminal bajarDelTren(int id, int nroTerminal) throws InterruptedException{
         Terminal retorno=null;
-
-        return retorno;
-    }
-
-    public Terminal bajarEnA(int id) throws InterruptedException {
-        Terminal retorno=null;
-        bajarA.acquire();
-        //lockTren.lock();
-        System.out.println("** El pasajero "+id+" baja del tren en la Estacion A! **");
+        bajadasSem[nroTerminal].acquire();
+        System.out.println("** El pasajero "+id+" baja del tren en la Estacion "+nroTerminal+"! **");
         cantActualEnTren--;
-        bajanEnA--;
-        //lockTren.unlock();
-        if(bajanEnA==0){
+        cantPersonasBajanEn[nroTerminal]--;
+        if(cantPersonasBajanEn[nroTerminal]==0){
             esperarBajenTren.release();
         }else{
-            bajarA.release();
+            bajadasSem[nroTerminal].release();
         }
-        retorno=this.terminales[0];//0 terminal A
-        
+        retorno=this.terminales[nroTerminal];
         return retorno;
     }
-    public Terminal bajarEnB(int id) throws InterruptedException {
-        Terminal retorno=null;
-        bajarB.acquire();
-        //lockTren.lock();
-        System.out.println("** El pasajero "+id+" baja del tren en la Estacion B! **");
-        cantActualEnTren--;
-        bajanEnB--;
-        //lockTren.unlock();
-        if(bajanEnB==0){
-            esperarBajenTren.release();
-        }else{
-            bajarB.release();
-        }
-        retorno=this.terminales[1];// 1 terminal B
-        return retorno;
-    }
-    public Terminal bajarEnC(int id) throws InterruptedException {
-        Terminal retorno=null;
-        bajarC.acquire();
-        //lockTren.lock();
-        System.out.println("** El pasajero "+id+" baja del tren en la Estacion C! **");
-        cantActualEnTren--;
-        bajanEnC--;
-        //lockTren.unlock();
-        if(bajanEnC==0){
-            esperarBajenTren.release();
-        }else{
-            bajarC.release();
-        }
-        retorno=this.terminales[2];// 2 terminal C
-        return retorno;
-    }
-
+    
     public void esperarQueBajenDelTren() throws InterruptedException {
         this.esperarBajenTren.acquire();
     }
 
-    public void abrirPuertasEnA(){
-        System.out.println("Tren abre las puertas en terminal A para que bajen los pasajeros");
-        bajarA.release();
-    }
-    public void abrirPuertasEnB(){
-        System.out.println("Tren abre las puertas en terminal B para que bajen los pasajeros");
-        bajarB.release();
-    }
-    public void abrirPuertasEnC(){
-        System.out.println("Tren abre las puertas en terminal C para que bajen los pasajeros");
-        bajarC.release();
+    public void abrirPuertasTren(int nroTerminal){
+        System.out.println("Tren abre las puertas en terminal "+nroTerminal+" para que bajen los pasajeros");
+        bajadasSem[nroTerminal].release();
     }
 
     public int getNumeroAerolineas(){
         return this.aerolineas.length;
     }
 
-    public int getBajanEnA() {
-        return bajanEnA;
-    }
-
-    public int getBajanEnB() {
-        return bajanEnB;
-    }
-
-    public int getBajanEnC() {
-        return bajanEnC;
+    public int getBajanEn(int nroTerminal) {
+        return cantPersonasBajanEn[nroTerminal];
     }
 
     public boolean getAbierto(){
         return abierto;
     }
     
+    public Aerolinea[] getAerolineas(){
+        return this.aerolineas;
+    }
     
 }

@@ -4,55 +4,41 @@ import java.awt.Color;
 
 public class Tren implements Runnable {
     private Aeropuerto aeropuerto;
-    private char lugarActual='x';// x : es el aeropuerto, a: terminal A, b: terminal B, c: terminal C
-    
-    public Tren(Aeropuerto aeropuerto) {
+    private int nroTerminalActual = -1;// -1 : es el aeropuerto, 0: terminal A, 1: terminal B, 2: terminal C
+    private int cantTerminales;
+
+    public Tren(Aeropuerto aeropuerto, int cantTerminales) {
         this.aeropuerto = aeropuerto;
-
-    }
-
-    public void irTerminalC() throws InterruptedException {
-        Thread.sleep(50);//2 mins sim
-        System.out.println(ConsoleColors.RED_BRIGHT+"*Tren en Terminal C*"+ConsoleColors.RESET);
-        lugarActual='c';
-    }
-
-    public void irTerminalB() throws InterruptedException {
-        Thread.sleep(50);
-        System.out.println(ConsoleColors.RED_BRIGHT+"*Tren en Terminal B*"+ConsoleColors.RESET);
-        lugarActual='b';
-    }
-
-    public void irTerminalA() throws InterruptedException {
-        Thread.sleep(50);
-        System.out.println(ConsoleColors.RED_BRIGHT+"*Tren en Terminal A*"+ConsoleColors.RESET);
-        lugarActual='a';
+        this.cantTerminales = cantTerminales ;// de 0 a cantTerminales
     }
 
     
+    public void siguienteTerminal() throws InterruptedException {
+        Thread.sleep(50);// 2 mins sim
+        nroTerminalActual = (nroTerminalActual + 1) % cantTerminales;
+        System.out.println(
+                ConsoleColors.RED_BRIGHT + "*Tren en Terminal " + nroTerminalActual + "*" + ConsoleColors.RESET);
+
+    }
+
     @Override
     public void run() {
         try {
-            while(true){
-                aeropuerto.trenListoParaQueSuban();//avisa que no está viajando y está listo para que los pasajero suban
-                aeropuerto.transporteATerminal();//comienza el recorrido del tren
-                irTerminalC();
-                if(aeropuerto.getBajanEnC()>0){
-                    aeropuerto.abrirPuertasEnC();
-                    aeropuerto.esperarQueBajenDelTren();
+            while (true) {
+                aeropuerto.trenListoParaQueSuban();// avisa que no está viajando y está listo para que los pasajero suban
+                aeropuerto.transporteATerminal();// comienza el recorrido del tren
+                
+                for (int i = 0; i < cantTerminales; i++) {
+                    siguienteTerminal();
+                    if (aeropuerto.getBajanEn(nroTerminalActual) > 0) {
+                        aeropuerto.abrirPuertasTren(nroTerminalActual);
+                        aeropuerto.esperarQueBajenDelTren();
+                    }
                 }
-                irTerminalB();
-                if(aeropuerto.getBajanEnB()>0){
-                    aeropuerto.abrirPuertasEnB();
-                    aeropuerto.esperarQueBajenDelTren();
-                }
-                irTerminalA();
-                if(aeropuerto.getBajanEnA()>0){
-                    aeropuerto.abrirPuertasEnA();
-                    aeropuerto.esperarQueBajenDelTren();
-                }
-                System.out.println(ConsoleColors.RED_BRIGHT+"*Tren de regreso a por nuevos pasajeros*"+ConsoleColors.RESET);
-                Thread.sleep(150);//tiempo que tarda en regresar al aeropuerto
+                nroTerminalActual=-1;//tren en aeropuerto
+
+                System.out.println(ConsoleColors.RED_BRIGHT + "*Tren de regreso a por nuevos pasajeros*" + ConsoleColors.RESET);
+                Thread.sleep(150);// tiempo que tarda en regresar al aeropuerto
             }
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
@@ -60,5 +46,5 @@ public class Tren implements Runnable {
         }
 
     }
-    
+
 }

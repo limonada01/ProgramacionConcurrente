@@ -6,6 +6,7 @@ public class Reloj implements Runnable {
     int hora;
     int min;
     Aeropuerto aeropuerto;
+    
 
     public Reloj(/*Aeropuerto aeropuerto*/) {
         this.hora = 5;
@@ -21,13 +22,9 @@ public class Reloj implements Runnable {
                 hora=(hora+1)%24;
                 System.out.println(ConsoleColors.WHITE_BOLD+"HORA ACTUAL:"+getHora()+ConsoleColors.RESET);
             }
-            if (hora == 6 && min==0) {
-                aeropuerto.abrirAeropuerto();
-            }
-            if (hora == 22 && min ==0 ) {
-                aeropuerto.cerrarAeropuerto();
-            }
-            
+            abrirAeropuerto();
+            cerrarAeropuerto();
+            chequearVuelosListosParaAbordar();
             try {
                 Thread.sleep(250);// un cuarto de segundo real por 10 minutos en la simulacion
             } catch (InterruptedException e) {
@@ -42,7 +39,18 @@ public class Reloj implements Runnable {
         on();
 
     }
-    
+    public void abrirAeropuerto(){
+        if (hora == 6 && min==0) {
+            aeropuerto.abrirAeropuerto();
+        }
+    }
+
+    public void cerrarAeropuerto(){
+        if (hora == 22 && min ==0 ) {
+            aeropuerto.cerrarAeropuerto();
+        }
+    }
+
     public int getHora(){
         return hora;
     }
@@ -78,10 +86,31 @@ public class Reloj implements Runnable {
                 retorno=true;
             }
         }else{
-                //si es mayor a 2 hora de diferencia
-                retorno=true;
+            //si es mayor a 2 hora de diferencia
+            retorno=true;
         }
         return retorno;
     }
+
+    public void chequearVuelosListosParaAbordar(){
+
+        Aerolinea[] aerolineas=aeropuerto.getAerolineas();
+        int cantAerolineas=aerolineas.length;
+        for(int i=0;i<cantAerolineas;i++){
+            Vuelo[] vuelos=aerolineas[i].getVuelos();
+            int cantVuelos=vuelos.length;
+            for(int j=0;j<cantVuelos;j++){
+                if(vuelos[j].getHorario()-this.hora ==1){//si falta 1 hora para que el vuelo salga
+                    vuelos[j].permitirQuePasajerosAborden();
+                }else{
+                    if(vuelos[j].getHorario()==this.hora){//si ya esta listo para despegar
+                        vuelos[j].avionListoParaDespegar();
+                    }
+                }
+                
+            }
+            
+        }
+    }   
 
 }

@@ -8,7 +8,6 @@ public class Pasajero implements Runnable {
     private Reloj reloj;
     private Aerolinea aerolinea;// para test seran 3 aerolineas representadas por un numero del 1 al 3 asignado en el aeropuerto
     private Vuelo vuelo;// para test seran 2 vuelos representados por un numero del 1 al 2 asignado en el aeropuerto
-    private char terminal;
     Random random=new Random();
     
     public Pasajero(int id,Reloj reloj,Aeropuerto aeropuerto){
@@ -18,13 +17,7 @@ public class Pasajero implements Runnable {
     }
 
     public Terminal bajarDelTren() throws InterruptedException {
-        Terminal retorno=null;
-        char terminal= (char) vuelo.getTerminal();
-        switch(terminal){
-            case 'a':retorno=aeropuerto.bajarEnA(id);break;
-            case 'b':retorno=aeropuerto.bajarEnB(id);break;
-            case 'c':retorno=aeropuerto.bajarEnC(id);break;
-        }
+        Terminal retorno=aeropuerto.bajarDelTren(id,  vuelo.getNroTerminal());
         return retorno;
     }
 
@@ -44,7 +37,7 @@ public class Pasajero implements Runnable {
             aerolinea.terminarCheckIn(id);//sale del puesto de atencion
             //System.out.println("******************************************************** "+id +" HORA: "+reloj.getHora());
             //System.out.println("TEST::::::::::::::::::::::: ID: "+id+" terminal: "+vuelo.getTerminal());
-            aeropuerto.subirAlTren(id,vuelo.getTerminal());
+            aeropuerto.subirAlTren(id,vuelo.getNroTerminal());
             Terminal terminal=bajarDelTren();
             if(reloj.calculoTiempo(vuelo.getHorario()) && aeropuerto.getAbierto()){//si el pasajero tiene una hora o mas antes del embarque y el aeropuerto está abierto
                 terminal.entrarFreeShop(id);
@@ -53,7 +46,8 @@ public class Pasajero implements Runnable {
                 
             }
             terminal.listoParaEmbarcar(id, vuelo.getPuertoEmbarque(),vuelo.getHorario());
-            
+            vuelo.esperarParaAbordar();
+            vuelo.embarcar(id, nroAerolinea);
        }catch(Exception e){
             e.getStackTrace();
 
